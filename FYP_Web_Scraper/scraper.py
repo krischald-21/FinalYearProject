@@ -1,176 +1,109 @@
-import requests
+import time
+import csv
+from selenium import webdriver
 from bs4 import BeautifulSoup
 
-# scrape data from https://itti.com.np/laptops-by-brands/dell
-url1 = "https://itti.com.np/laptops-by-brands/dell"
-response1 = requests.get(url1)
-soup1 = BeautifulSoup(response1.content, "html.parser")
-products1 = soup1.find_all("div", class_="product-item-info")
+# set up the Chrome daraz_driver
+daraz_driver = webdriver.Chrome()
+itti_driver = webdriver.Chrome()
 
-# scrape data from https://www.sastodeal.com/electronic/laptops/dell.html
-url2 = "https://www.sastodeal.com/electronic/laptops/dell.html"
-response2 = requests.get(url2)
-soup2 = BeautifulSoup(response2.content, "html.parser")
-products2 = soup2.find_all("div", class_="product-item-details")
-# create dictionaries to store the data
-data1 = {}
-data2 = {}
+# navigate to the website
+daraz_url = 'https://www.daraz.com.np/dell/?from=filter&q=laptops'
+daraz_driver.get(daraz_url)
 
-# extract data from https://itti.com.np
-for product in products1:
-    name = product.find("a", class_="product-item-link").text.strip()
-    price = product.find("span", class_="price").text.strip()
-    data1[name] = price
+# itti_url = 'https://itti.com.np/laptops-by-brands/dell'
+# itti_driver.get(itti_url)
+time.sleep(3)
 
-# extract data from https://www.sastodeal.com
-for product in products2:
-    try:
-        name = product.find("a", class_="product-item-link").text.strip()
-        price = product.find("span", class_="price").text.strip()
-        data2[name] = price
-    except:
-        break
-
-# compare prices of the same products
-for name in data1:
-    if name in data2:
-        print("Product:", name)
-        print("Price on itti.com.np:", data1[name])
-        print("Price on sastodeal.com:", data2[name])
-        print()
+# create an empty list to store the laptop data
+daraz_laptop_data = []
 
 
-# from sklearn.feature_extraction.text import CountVectorizer
-# from sklearn.metrics.pairwise import cosine_similarity
-# from bs4 import BeautifulSoup
-# import requests
+def get_daraz_data():
+    # get the HTML content of the page
+    html = daraz_driver.page_source
 
-# itti_url = 'https://itti.com.np/gaming-laptops-nepal'
-# ptech_url = 'https://ptechktm.com/buy-gaming-laptop-nepal'
+    # create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
 
+    # find all the laptops on the page
+    laptops = soup.find_all('div', {'class': 'box--pRqdD'})
 
-# def itti_laptops():
-#     try:
-#         itti_dict = []
-#         response = requests.get(itti_url)
-#         soup = BeautifulSoup(response.content, "html.parser")
-#         laptops = soup.find_all("div", class_="product-item-info")
+    # loop through each laptop and extract its data
+    for laptop in laptops:
+        # click on the laptop to open its product page
+        link_div = laptop.find('div', {'class': 'title--wFj93'})
+        laptop_link = link_div.find('a').get('href')
+        print(laptop_link)
+        daraz_driver.get('https:'+laptop_link)
+        time.sleep(3)
 
-#         for laptop in laptops:
-#             list_items = {}
-#             name = laptop.find("a", class_="product-item-link").text.strip()
-#             price = laptop.find("span", class_="price").text.strip()
-#             list_items['name'] = name
-#             list_items['price'] = price
-#             itti_dict.append(list_items)
-#         print(itti_dict)
-#     except:
-#         return
+        # get the HTML content of the product page
+        html = daraz_driver.page_source
 
+        # create a BeautifulSoup object for the product page
+        soup = BeautifulSoup(html, 'html.parser')
 
-# itti_laptops()
+        # extract the laptop data from the product page
+        name = soup.find(
+            'span', {'class': 'pdp-mod-product-badge-title'}).text.strip().lower()
+        price = float(soup.find(
+            'span', {'class': 'pdp-price'}).text.strip().replace(',', '').replace('Rs', '').replace('. ', ''))
 
-# string1 = "hello world"
-# string2 = "world hello"
+        specs = soup.find_all('li', {'class': 'key-li'})
+        brand = None
+        display_size = None
+        processor = None
+        processor_gen = None
+        gpu = 'internal'
+        ram = None
+        storage_type = None
+        storage_size = None
 
-# # create a CountVectorizer object to convert the strings to vectors of word frequencies
-# vectorizer = CountVectorizer().fit_transform([string1, string2])
+        if('ssd' in name.split()):
+            storage_type = 'ssd'
+        else:
+            storage_type = 'hdd'
 
-# # calculate the cosine similarity of the vectors
-# similarity = cosine_similarity(vectorizer)[0][1]
+        for spec in specs:
+            spec_title = spec.find('span').text.strip().lower()
+            spec_value = spec.find('div').text.strip().lower()
+            if spec_title == 'brand':
+                brand = spec_value
+            elif spec_title == 'display size':
+                display_size = spec_value.replace(' inch', '')
+            elif spec_title == 'ram memory':
+                ram = spec_value.replace('gb', '')
+            elif spec_title == 'processor':
+                if 'core' in spec_value.split:
+                    processor = spec_value.replace('core', 'intel')
+            elif spec_title == 'generation':
+                processor_gen = spec_value.replace('th', '').replace(
+                    'st', '').replace('nd', '').replace('rd', '')
+            elif spec_title == 'graphic card':
+                gpu = spec_value
+            elif spec_title == 'storage type':
+                storage_type = spec_value
+            elif spec_title == 'storage capacity' or spec_title == 'storage_capacity_new':
+                storage_size = spec_value
 
-# print("Cosine similarity:", similarity)
-
-
-# # importing necessary libraries
-# import requests
-# import csv
-# from bs4 import BeautifulSoup
-
-# # initializing URLS for web scraping
-# # itti_url = input("Enter Itti URL: ")
-
-
-# # def itti_laptops():
-# #     try:
-# #         # initializing empty dictionary to store laptop details
-# #         laptops = {}
-# #         response = requests.get(itti_url)
-# #         # parsing content of the request page using beautiful soup
-# #         soup = BeautifulSoup(response.content, "html.parser")
-# #         # finding all the laptops in the webpage
-# #         laptop = soup.find("div", class_="col2-layout")
-# #         # getting necessary information from the webpage
-# #         name = laptop.find("span", class_="base").text.strip()
-# #         all_name = name.split()
-# #         description = laptop.find("p").text.strip()
-# #         brand = all_name[0]
-# #         price = laptop.find("span", class_="price").text.strip()
-# #         # adding laptop's details into dictionary
-# #         laptops["productName"] = name
-# #         laptops["productBrand"] = brand
-# #         laptops["productDescription"] = description
-# #         laptops["productCategory"] = "laptop"
-
-# #         return laptops
-# #     except:
-# #         return "NA"
-
-# # # main method
-
-
-# # def main():
-# #     # getting laptop details
-# #     product_det = itti_laptops()
-# #     # opening csv file to store laptop details using csv
-# #     file = open('products.csv', 'a')
-# #     writer = csv.DictWriter(file, fieldnames=list(product_det.keys()))
-# #     writer.writerow(product_det)
-# #     file.close()
+        daraz_laptop_data.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'display_size': display_size,
+            'processor': processor,
+            'processor_gen': processor_gen,
+            'gpu': gpu,
+            'ram': ram,
+            'storage_type': storage_type,
+            'storage_size': storage_size
+        })
 
 
-# # main()
+# close the Chrome daraz_driver
+daraz_driver.quit()
 
-
-# sd_url = "https://www.sastodeal.com/electronic/laptops.html"
-# ptech_url = "https://ptechktm.com/buy-laptop-nepal"
-
-
-# def sasto_deal_laptops():
-#     try:
-#         response = requests.get(sd_url)
-
-#         # Parsing the HTML content of the requested webpage using Beautiful Soup
-#         soup = BeautifulSoup(response.content, "html.parser")
-
-#         # Finding all the laptops in the webpage
-#         laptop_list = soup.find_all("div", class_="product-item-details")
-
-#         # Extracting necessary information for price comparison
-#         for laptop in laptop_list:
-#             name = laptop.find("a", class_="product-item-link").text.strip()
-#             price = laptop.find("span", class_="price").text.strip()
-
-#             print(f"Name: {name}")
-#             print(f"Price: {price}")
-#             print()
-#     except:
-#         return
-
-
-# def ptech_laptops():
-#     try:
-#         response = requests.get(ptech_url)
-#         soup = BeautifulSoup(response.content, "html.parser")
-
-#         laptops = soup.find_all("div", class_="images-container")
-
-#         for laptop in laptops:
-#             name = laptop.find("a", class_="product-item-link").text.strip()
-#             price = laptop.find("span", class_="price").text.strip()
-#             print(f"Name: {name}")
-#             print(f"Price: {price}")
-#             print()
-
-#     except:
-#         return
+# # write the laptop data to a CSV file
+# with open('daraz_laptop_data.csv', 'w', newline='') as file:
+#     writer = csv.DictWriter(file, fieldnames=daraz_laptop_data[0].keys
