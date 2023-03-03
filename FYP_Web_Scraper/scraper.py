@@ -11,12 +11,14 @@ itti_driver = webdriver.Chrome()
 daraz_url = 'https://www.daraz.com.np/dell/?from=filter&q=laptops'
 daraz_driver.get(daraz_url)
 
-# itti_url = 'https://itti.com.np/laptops-by-brands/dell'
-# itti_driver.get(itti_url)
+itti_url = 'https://itti.com.np/laptops-by-brands/dell'
+itti_driver.get(itti_url)
 time.sleep(3)
 
 # create an empty list to store the laptop data
+all_laptops = []
 daraz_laptop_data = []
+itti_laptop_data = []
 
 
 def get_daraz_data():
@@ -54,16 +56,7 @@ def get_daraz_data():
         brand = None
         display_size = None
         processor = None
-        processor_gen = None
-        gpu = 'internal'
         ram = None
-        storage_type = None
-        storage_size = None
-
-        if('ssd' in name.split()):
-            storage_type = 'ssd'
-        else:
-            storage_type = 'hdd'
 
         for spec in specs:
             spec_title = spec.find('span').text.strip().lower()
@@ -75,17 +68,7 @@ def get_daraz_data():
             elif spec_title == 'ram memory':
                 ram = spec_value.replace('gb', '')
             elif spec_title == 'processor':
-                if 'core' in spec_value.split:
-                    processor = spec_value.replace('core', 'intel')
-            elif spec_title == 'generation':
-                processor_gen = spec_value.replace('th', '').replace(
-                    'st', '').replace('nd', '').replace('rd', '')
-            elif spec_title == 'graphic card':
-                gpu = spec_value
-            elif spec_title == 'storage type':
-                storage_type = spec_value
-            elif spec_title == 'storage capacity' or spec_title == 'storage_capacity_new':
-                storage_size = spec_value
+                processor = spec_value
 
         daraz_laptop_data.append({
             'name': name,
@@ -93,16 +76,88 @@ def get_daraz_data():
             'price': price,
             'display_size': display_size,
             'processor': processor,
-            'processor_gen': processor_gen,
-            'gpu': gpu,
-            'ram': ram,
-            'storage_type': storage_type,
-            'storage_size': storage_size
+            'ram': ram
+        })
+        all_laptops.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'display_size': display_size,
+            'processor': processor,
+            'ram': ram
+        })
+
+
+def get_itti_data():
+    # get the HTML content of the page
+    html = itti_driver.page_source
+
+    # create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # find all the laptops on the page
+    laptops = soup.find_all('div', {'class': 'product-item-info'})
+
+    # loop through each laptop and extract its data
+    for laptop in laptops:
+        # click on the laptop to open its product page
+        laptop_link = laptop.find(
+            'a', {'class': 'product-item-link'}).get('href')
+        itti_driver.get(laptop_link)
+        time.sleep(3)
+
+        # get the HTML content of the product page
+        html = itti_driver.page_source
+
+        # create a BeautifulSoup object for the product page
+        soup = BeautifulSoup(html, 'html.parser')
+
+        # extract the laptop data from the product page
+        name = soup.find(
+            'h1', {'class': 'page-title'}).text.strip().lower()
+        price = float(soup.find(
+            'span', {'class': 'price'}).text.strip().replace(',', '').replace('NPR', ''))
+
+        specs = soup.find_all('tr')
+        brand = name.split()[0]
+        display_size = None
+        processor = None
+        ram = None
+
+        for spec in specs:
+            spec_title = spec.select('tr > td')[0].get_text(strip=True).lower()
+            try:
+                spec_value = spec.find('span').text.strip()
+            except:
+                spec_value = 'NA'
+            if spec_title == 'cpu':
+                processor = spec_value
+            elif spec_title == 'display':
+                display_size = spec_value
+            elif spec_title == 'memory':
+                ram = spec_value
+
+        itti_laptop_data.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'display_size': display_size,
+            'processor': processor,
+            'ram': ram
+        })
+        all_laptops.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'display_size': display_size,
+            'processor': processor,
+            'ram': ram
         })
 
 
 # close the Chrome daraz_driver
 daraz_driver.quit()
+itti_driver.quit()
 
 # # write the laptop data to a CSV file
 # with open('daraz_laptop_data.csv', 'w', newline='') as file:
