@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 # set up the Chrome daraz_driver
 daraz_driver = webdriver.Chrome()
 itti_driver = webdriver.Chrome()
+sasto_driver = webdriver.Chrome()
 
 # navigate to the website
 daraz_url = 'https://www.daraz.com.np/dell/?from=filter&q=laptops'
@@ -13,12 +14,16 @@ daraz_driver.get(daraz_url)
 
 itti_url = 'https://itti.com.np/laptops-by-brands/dell'
 itti_driver.get(itti_url)
+
+sasto_url = 'https://www.sastodeal.com/electronic/laptops/dell.html'
+sasto_driver.get(sasto_url)
 time.sleep(3)
 
 # create an empty list to store the laptop data
 all_laptops = []
 daraz_laptop_data = []
 itti_laptop_data = []
+sasto_laptop_data = []
 
 
 def get_daraz_data():
@@ -76,7 +81,8 @@ def get_daraz_data():
             'price': price,
             'display_size': display_size,
             'processor': processor,
-            'ram': ram
+            'ram': ram,
+            'store': 'daraz'
         })
         all_laptops.append({
             'name': name,
@@ -84,7 +90,8 @@ def get_daraz_data():
             'price': price,
             'display_size': display_size,
             'processor': processor,
-            'ram': ram
+            'ram': ram,
+            'store': 'daraz'
         })
 
 
@@ -143,6 +150,78 @@ def get_itti_data():
             'price': price,
             'display_size': display_size,
             'processor': processor,
+            'ram': ram,
+            'store': 'itti'
+        })
+        all_laptops.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'display_size': display_size,
+            'processor': processor,
+            'ram': ram,
+            'store': 'itti'
+        })
+
+
+def get_sasto_data():
+    # get the HTML content of the page
+    html = sasto_driver.page_source
+
+    # create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # find all the laptops on the page
+    laptops = soup.find_all('div', {'class': 'product-item-info'})
+
+    # loop through each laptop and extract its data
+    for laptop in laptops:
+        # click on the laptop to open its product page
+        laptop_link = laptop.find(
+            'a', {'class': 'product-item-link'}).get('href')
+        sasto_driver.get(laptop_link)
+        time.sleep(3)
+
+        # get the HTML content of the product page
+        html = sasto_driver.page_source
+
+        # create a BeautifulSoup object for the product page
+        soup = BeautifulSoup(html, 'html.parser')
+
+        # extract the laptop data from the product page
+        name = soup.find(
+            'span', {'class': 'base'}).text.strip().lower()
+        price = float(soup.find(
+            'span', {'class': 'price'}).text.strip().replace(',', '').replace('रू', ''))
+        specs = soup.find_all('tr')
+        brand = name.split()[0]
+        display_size = None
+        processor = None
+        ram = None
+
+        for spec in specs:
+            spec_title = spec.select('tr > td')[0].get_text(strip=True).lower()
+            try:
+                spec_value = spec.select('tr > td')[
+                    1].get_text(strip=True).lower()
+            except:
+                spec_value = 'NA'
+            print(spec_title)
+            print(spec_value)
+            print()
+            if spec_title == 'processor' or spec_title == 'cpu':
+                processor = spec_value
+            elif spec_title == 'display size' or spec_title == 'display':
+                display_size = spec_value
+            elif spec_title == 'ram' or spec_title == 'memory':
+                ram = spec_value
+
+        sasto_laptop_data.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'display_size': display_size,
+            'processor': processor,
             'ram': ram
         })
         all_laptops.append({
@@ -155,9 +234,13 @@ def get_itti_data():
         })
 
 
+get_sasto_data()
+print(sasto_laptop_data)
+
 # close the Chrome daraz_driver
 daraz_driver.quit()
 itti_driver.quit()
+sasto_driver.quit()
 
 # # write the laptop data to a CSV file
 # with open('daraz_laptop_data.csv', 'w', newline='') as file:
