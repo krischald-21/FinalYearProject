@@ -1,3 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+.searchbar{
+  outline: none;
+  border: 2px solid #c6c6c6;
+  padding: 0 1.5em;
+}
+
+.searchbar:focus, .searchbar:hover{
+  border: 2px solid #8e3ac9;
+}
+
+.buton{
+  background-color: #8e3ac9;
+  border-color: #8e3ac9;
+  font-weight: bold;
+  color: white;
+  border-style: none;
+  border-radius: 5px;
+}
+
+.buton:hover{
+  background-color: #963dd4;
+  border-color: #963dd4;
+}
+
+.nav-bar, #navLink{
+  font-weight: bold;
+  color: #8e3ac9;
+  text-shadow: white 0 0 0.2em;
+}
+
+#navLink:hover{
+  text-decoration: underline;
+}
+
+.homepage{
+  background: url(./homepage-bg.jpg);
+  background-size: "cover";
+  background-position: "center";
+  backdrop-filter: blur(10px);
+  height: 100vh;
+  width: 100%;
+}
+
 .App {
   text-align: center;
 }
