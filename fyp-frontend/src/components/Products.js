@@ -110,7 +110,7 @@ class ProductCards extends React.Component {
     }
     return this.state.data.map((e) => (
       <Col key={e.productId} lg="4">
-        <Card style={{ overflow: "hidden" }}>
+        <Card className="mb-3" style={{ overflow: "hidden" }}>
           <CardTitle>
             <img
               src={e.imgLink}

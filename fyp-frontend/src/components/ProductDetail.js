@@ -91,13 +91,13 @@ class DetailContent extends React.Component {
                 </h4>
               </CardTitle>
               <CardBody>
-                {this.state.storeData.map((e) => (
+                {this.state.data.map((e) => (
                   <div className="available-stores" key={e.storeId}>
                     <Row className="mt-1 mb-1 h-100">
                       <Col md="6">
                         <img
-                          src={e.imgLink}
-                          alt={e.storeName}
+                          src={e.store.imgLink}
+                          alt={e.store.storeName}
                           style={{
                             width: "70%",
                             height: "100%",
