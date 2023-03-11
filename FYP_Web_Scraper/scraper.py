@@ -15,13 +15,13 @@ sasto_driver = webdriver.Chrome()
 filename = 'laptops.csv'
 
 # navigate to the website
-daraz_url = 'https://www.daraz.com.np/acer/?from=filter&q=laptops'
+daraz_url = 'https://www.daraz.com.np/dell/?from=filter&q=laptops'
 daraz_driver.get(daraz_url)
 
-itti_url = 'https://itti.com.np/laptops-by-brands/acer-laptop-nepal'
+itti_url = 'https://itti.com.np/laptops-by-brands/dell'
 itti_driver.get(itti_url)
 
-sasto_url = 'https://www.sastodeal.com/electronic/laptops/acer.html'
+sasto_url = 'https://www.sastodeal.com/electronic/laptops/dell.html'
 sasto_driver.get(sasto_url)
 time.sleep(3)
 
@@ -48,6 +48,7 @@ def get_daraz_data():
         name_element = laptop.find(
             'div', {'class': 'title--wFj93'})
         name = name_element.find('a').text.strip().lower().replace('\n', ' ')
+        product_link = name_element.find('a').get('href')
         price = float(laptop.find(
             'span', {'class': 'currency--GVKjl'}).text.strip().replace(',', '').replace('Rs. ', ''))
         brand = name.split()[0]
@@ -55,6 +56,7 @@ def get_daraz_data():
         img_element = laptop.find('div', {'class': 'img--VQr82'})
         img = img_element.find('img')
         img_link = img.get('src')
+        store_img_link = 'https://www.daraz.com.np/products/lenovo-legion-5-ryzen-5-4600h-gtx-1650ti-8gb-ram-256gb-ssd-1tb-hdd-156-120hz-display-i118886063-s1032553910.html?spm=a2a0e.searchlist.list.6.38126940J490bI&search=1'
         # click on the laptop to open its product page
         # link_div = laptop.find('div', {'class': 'title--wFj93'})
         # laptop_link = link_div.find('a').get('href')
@@ -88,14 +90,18 @@ def get_daraz_data():
             'brand': brand,
             'price': price,
             'store': store,
-            'imgLink': img_link
+            'imgLink': img_link,
+            'productLink': product_link,
+            'storeImgLink': store_img_link
         })
         all_laptops.append({
             'name': name,
             'brand': brand,
             'price': price,
             'store': 'daraz',
-            'imgLink': img_link
+            'imgLink': img_link,
+            'productLink': product_link,
+            'storeImgLink': store_img_link
         })
 
 
@@ -114,6 +120,8 @@ def get_itti_data():
         # extract the laptop data from the product page
         name = laptop.find(
             'a', {'class': 'product-item-link'}).text.strip().lower().replace('\n', ' ')
+        product_link = laptop.find(
+            'a', {'class': 'product-item-link'}).get('href')
         price_element = laptop.find('span', {'data-price-type': 'finalPrice'})
         price = float(price_element.find(
             'span', {'class': 'price'}).text.strip().replace(',', '').replace('NPR', ''))
@@ -122,6 +130,7 @@ def get_itti_data():
         img_element = laptop.find('span', {'class': 'product-image-wrapper'})
         img = img_element.find('img')
         img_link = img.get('src')
+        store_img_link = 'https://itti.com.np/lenovo-legion-5-ryzen-5-price-nepal'
         # click on the laptop to open its product page
         # laptop_link = laptop.find(
         #     'a', {'class': 'product-item-link'}).get('href')
@@ -158,14 +167,18 @@ def get_itti_data():
             'brand': brand,
             'price': price,
             'store': store,
-            'imgLink': img_link
+            'imgLink': img_link,
+            'productLink': product_link,
+            'storeImgLink': store_img_link
         })
         all_laptops.append({
             'name': name,
             'brand': brand,
             'price': price,
             'store': store,
-            'imgLink': img_link
+            'imgLink': img_link,
+            'productLink': product_link,
+            'storeImgLink': store_img_link
         })
 
 
@@ -185,6 +198,8 @@ def get_sasto_data():
             # extract the laptop data from the product page
             name = laptop.find(
                 'a', {'class': 'product-item-link'}).text.strip().lower().replace('\n', ' ')
+            product_link = laptop.find(
+                'a', {'class': 'product-item-link'}).get('href')
             price_element = laptop.find(
                 'span', {'data-price-type': 'finalPrice'})
             price = float(price_element.find(
@@ -195,6 +210,7 @@ def get_sasto_data():
                 'span', {'class': 'product-image-wrapper'})
             img = img_element.find('img')
             img_link = img.get('src')
+            store_img_link = 'https://www.sastodeal.com/lenovo-legion-5-ryzen-7-5800h-rtx-3050ti-8gb-ram-512gb-ssd-15-6-fhd-display-tech-store-0147852.html'
             # click on the laptop to open its product page
             # laptop_link = laptop.find(
             #     'a', {'class': 'product-item-link'}).get('href')
@@ -232,14 +248,18 @@ def get_sasto_data():
                 'brand': brand,
                 'price': price,
                 'store': store,
-                'imgLink': img_link
+                'imgLink': img_link,
+                'productLink': product_link,
+                'storeImgLink': store_img_link
             })
             all_laptops.append({
                 'name': name,
                 'brand': brand,
                 'price': price,
                 'store': 'sastodeal',
-                'imgLink': img_link
+                'imgLink': img_link,
+                'productLink': product_link,
+                'storeImgLink': store_img_link
             })
         except:
             break
