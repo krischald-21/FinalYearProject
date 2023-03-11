@@ -2,22 +2,19 @@ import React, { useState } from "react";
 import { Button, Container, Input, Row, Col } from "reactstrap";
 import NavBar from "./NavBar";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const baseURL = "https://localhost:7005/";
-
-function SearchBar(props) {
+function Home() {
   const [value, setValue] = useState("");
-  const [id, setId] = useState("");
-  var data = props.data;
+  const history = useNavigate();
 
   const changeHandler = (e) => {
     setValue(e.target.value);
   };
 
-  const searchHandler = (searchItem) => {
-    //api to get data form database
-    console.log("search", searchItem);
+  const submitHandler = (e) => {
+    e.preventDefault();
+    history(`/products?q=${encodeURIComponent(value)}`);
   };
 
   return (
@@ -30,49 +27,23 @@ function SearchBar(props) {
       >
         <div className="w-100">
           <Container>
-            <Row>
+            <Row style={{ height: "3em" }}>
               <Col lg="10">
                 <input
-                  style={{ height: "3em" }}
                   type="text"
-                  className="searchbar w-100"
+                  className="searchbar w-100 h-100"
                   placeholder="Search..."
                   value={value}
                   onChange={changeHandler}
                 />
-                <div className="dropdown">
-                  {data
-                    .filter((item) => {
-                      const searchTerm = value.toLowerCase();
-                      const productName = item.productName.toLowerCase();
-
-                      return searchTerm && productName.startsWith(searchTerm);
-                    })
-                    .map((item) => (
-                      <div
-                        onClick={() => {
-                          setValue(item.productName);
-                          setId(item.productId);
-                        }}
-                        className="dropdown-row bg-white p-1 searchbar"
-                        style={{ cursor: "pointer" }}
-                      >
-                        {item.productName}
-                      </div>
-                    ))}
-                </div>
               </Col>
               <Col lg="2">
-                {console.log(id)}
-                <Link to="/products" state={id}>
-                  <button
-                    style={{ height: "3em" }}
-                    className="w-100 buton"
-                    onClick={() => searchHandler(value)}
-                  >
-                    Search
-                  </button>
-                </Link>
+                {console.log(value)}
+                {/* <Link to={{ pathname: "products/", state: { search } }}> */}
+                <button className="w-100 h-100 buton" onClick={submitHandler}>
+                  Search
+                </button>
+                {/* </Link> */}
               </Col>
             </Row>
             <Row>
@@ -88,26 +59,6 @@ function SearchBar(props) {
       </div>
     </div>
   );
-}
-
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
-
-  async componentDidMount() {
-    await axios.get(baseURL + "api/Products").then((res) => {
-      this.setState({
-        data: res.data,
-      });
-    });
-  }
-  render() {
-    return <SearchBar data={this.state.data} />;
-  }
 }
 
 export default Home;
