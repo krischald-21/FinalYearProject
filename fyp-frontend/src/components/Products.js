@@ -91,7 +91,8 @@ class ProductCards extends React.Component {
           data: res.data,
           isEmpty: res.data.length === 0,
         });
-      });
+      })
+      .catch((e) => console.log(e));
   }
 
   render() {
