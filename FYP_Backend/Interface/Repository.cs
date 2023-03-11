@@ -57,5 +57,10 @@ namespace FYP_Backend.Interface
 		{
 			return await _context.StoreProducts.Include(x => x.Product).Include(x => x.Store).Where(x => x.StoreProductId == id).FirstOrDefaultAsync();
 		}
+
+		public async Task<List<Products>> GetProducts(string name)
+		{
+			return await _context.Products.Where(x => x.ProductName.StartsWith(name)).ToListAsync();
+		}
 	}
 }

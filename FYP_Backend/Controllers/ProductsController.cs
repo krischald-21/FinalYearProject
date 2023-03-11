@@ -105,5 +105,13 @@ namespace FYP_Backend.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
+
+        // GET: api/SearchProducts/lenovo
+        [Route("~/api/SearchProducts/{name}")]
+        [HttpGet]
+        public async Task<IEnumerable<Products>> GetSearchProducts(string name)
+        {
+            return await _repository.GetProducts(name);
+        }
     }
 }
