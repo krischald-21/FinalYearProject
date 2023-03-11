@@ -7,5 +7,6 @@ namespace FYP_Backend.Models
 		[Key]
 		public int StoreId { get; set; }
 		public string? StoreName { get; set; }
+		public string? ImgLink { get; set; }
 	}
 }
