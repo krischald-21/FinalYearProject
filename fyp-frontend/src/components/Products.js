@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import SearchBar from "./SearchBar";
 
 const Products = (props) => {
   const [data, setData] = useState([]);
@@ -53,28 +54,7 @@ const Products = (props) => {
   return (
     <div className="search-result">
       <NavBar />
-      <Row className="m-2 p-2">
-        <Col
-          lg="10"
-          style={{
-            height: "2.5em",
-          }}
-        >
-          <input
-            className="searchbar w-100 h-100"
-            type="text"
-            value={searchTerm}
-            max={255}
-            placeholder="Search..."
-            onChange={changeHandler}
-          />
-        </Col>
-        <Col lg="2">
-          <button className="buton w-100 h-100" onClick={submitHandler}>
-            Search
-          </button>
-        </Col>
-      </Row>
+      <SearchBar searchParams={searchParams.get("q")} />
 
       <Container className="search-content p-4">
         <Row className="mt-3">
@@ -82,7 +62,10 @@ const Products = (props) => {
         </Row>
         <hr className="hr-line" />
         <Row>
-          <ProductCards searchTerm={searchTerm} />
+          <ProductCards
+            searchTerm={searchTerm}
+            searchParams={searchParams.get("q")}
+          />
         </Row>
       </Container>
     </div>
@@ -96,6 +79,7 @@ class ProductCards extends React.Component {
       data: [],
       searchTerm: this.props.searchTerm,
       isEmpty: false,
+      searchParams: this.props.searchParams,
     };
   }
 
@@ -124,7 +108,7 @@ class ProductCards extends React.Component {
       );
     }
     return this.state.data.map((e) => (
-      <Col lg="4">
+      <Col key={e.productId} lg="4">
         <Card style={{ overflow: "hidden" }}>
           <CardTitle>
             <img
@@ -135,7 +119,10 @@ class ProductCards extends React.Component {
           </CardTitle>
           <CardBody>
             <CardHeader>{e.productName}</CardHeader>
-            <Link>
+            <Link
+              to={"/product-details/" + e.productId}
+              state={{ id: e.productId, searchParams: this.state.searchParams }}
+            >
               <button className="buton mt-3 p-2">Compare Prices</button>
             </Link>
           </CardBody>
