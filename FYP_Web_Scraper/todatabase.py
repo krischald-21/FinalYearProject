@@ -49,11 +49,7 @@ def add_to_products():
         # product does not exist, insert into database
         # get the index of the first occurrence of the product name in the CSV file
         index = df.loc[df['name'] == name].index[0]
-        # # get the store ID from the CSV file
-        # store_query = "SELECT storeId FROM stores WHERE storeName = ?"
-        # cursor.execute(store_query, df.loc[index, 'store'])
-        # store_id = cursor.fetchone()[0]
-        # insert the product into the database, using the store ID from above
+        # insert the product into the database
         product_query = "INSERT INTO products (productName, productBrand, imgLink) VALUES (?, ?, ?)"
         cursor.execute(product_query, name,
                        df.loc[index, 'brand'], df.loc[index, 'imgLink'])
@@ -84,21 +80,27 @@ def add_to_storeProducts():
         cursor.execute(check_query, row['productLink'])
         result = cursor.fetchone()
         if result:
-            # record already exists, check if price has changed
+            # if record already exists, check if price has changed
             if result[0] != row['price']:
                 # price has changed, update record
                 update_query = "UPDATE storeProducts SET price = ? WHERE productLink = ?"
                 cursor.execute(update_query, row['price'], row['productLink'])
                 conn.commit()
         else:
-            # record does not exist, insert new record
+            # if record does not exist, insert new record
             store_product_query = "INSERT INTO storeProducts (storeId, productId, price, productLink) VALUES (?, ?, ?, ?)"
             cursor.execute(store_product_query, store_id,
                            product_id, row['price'], row['productLink'])
             conn.commit()
 
 
-add_to_storeProducts()
+def main():
+    add_to_stores()
+    add_to_products()
+    add_to_storeProducts()
+
+
+main()
 
 # close database connection
 conn.close()

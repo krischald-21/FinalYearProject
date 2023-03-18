@@ -144,7 +144,7 @@ class DetailContent extends React.Component {
                     <CardText>Rs. {e.price}</CardText>
                   </Col>
                   <Col lg="3">
-                    <Link to={e.productLink}>
+                    <Link to={e.productLink} target="_blank">
                       <button className="buton w-100" style={{ height: "3em" }}>
                         Buy from {e.store.storeName}
                       </button>

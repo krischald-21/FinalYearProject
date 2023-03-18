@@ -1,11 +1,12 @@
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_distances
 import time
 import csv
 import os.path
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from strsimpy.jaro_winkler import JaroWinkler
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 # initializing normalized levenshtein object
 levenshtein = JaroWinkler()
@@ -16,16 +17,16 @@ itti_driver = webdriver.Chrome()
 sasto_driver = webdriver.Chrome()
 
 # Name of the CSV file
-filename = 'test.csv'
+filename = 'laptops.csv'
 
 # navigate to the website
-daraz_url = 'https://www.daraz.com.np/dell/?from=filter&q=laptops'
+daraz_url = 'https://www.daraz.com.np/laptops/lenovo/?spm=a2a0e.searchlistcategory.cate_5_4.3.31ab4969PrBAsd'
 daraz_driver.get(daraz_url)
 
-itti_url = 'https://itti.com.np/laptops-by-brands/dell'
+itti_url = 'https://itti.com.np/laptops-by-brands/lenovo-laptops-nepal'
 itti_driver.get(itti_url)
 
-sasto_url = 'https://www.sastodeal.com/electronic/laptops/dell.html'
+sasto_url = 'https://www.sastodeal.com/electronic/laptops/lenovo.html'
 sasto_driver.get(sasto_url)
 time.sleep(3)
 
@@ -46,8 +47,15 @@ def get_daraz_data():
     # find all the laptops on the page
     laptops = soup.find_all('div', {'class': 'box--pRqdD'})
 
+    for i in range(5):
+        # Scroll down the page
+        ActionChains(daraz_driver).move_to_element(
+            daraz_driver.find_element(By.TAG_NAME, 'body')).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
+
     # loop through each laptop and extract its data
     for laptop in laptops:
+
         # extract the laptop data from the product page
         name_element = laptop.find(
             'div', {'class': 'title--wFj93'})
@@ -118,6 +126,11 @@ def get_itti_data():
 
     # find all the laptops on the page
     laptops = soup.find_all('div', {'class': 'product-item-info'})
+    for i in range(5):
+        # Scroll down the page
+        ActionChains(itti_driver).move_to_element(
+            itti_driver.find_element(By.TAG_NAME, 'body')).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
 
     # loop through each laptop and extract its data
     for laptop in laptops:
@@ -196,9 +209,16 @@ def get_sasto_data():
     # find all the laptops on the page
     laptops = soup.find_all('div', {'class': 'product-item-info'})
 
+    for i in range(5):
+        # Scroll down the page
+        ActionChains(sasto_driver).move_to_element(
+            sasto_driver.find_element(By.TAG_NAME, 'body')).send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(1)
+
     # loop through each laptop and extract its data
     for laptop in laptops:
         try:
+
             # extract the laptop data from the product page
             name = laptop.find(
                 'a', {'class': 'product-item-link'}).text.strip().lower().replace('\n', ' ')
@@ -302,13 +322,11 @@ def add_to_csv(fname):
             writer.writerow(row)  # write each row of data
 
 
-def main():
+def scrape():
     # scraping data
     get_daraz_data()
     get_itti_data()
     get_sasto_data()
-
-    add_to_csv('before.csv')
 
     # standardizing names
     similar_names()
@@ -330,7 +348,7 @@ def main():
     #         print("Name: " + name + ", Stores: " + ", ".join(stores))
 
 
-main()
+scrape()
 
 # close the Chrome daraz_driver
 daraz_driver.quit()
