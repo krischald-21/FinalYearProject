@@ -5,6 +5,10 @@ import csv
 import os.path
 from selenium import webdriver
 from bs4 import BeautifulSoup
+from strsimpy.jaro_winkler import JaroWinkler
+
+# initializing normalized levenshtein object
+levenshtein = JaroWinkler()
 
 # set up the Chrome daraz_driver
 daraz_driver = webdriver.Chrome()
@@ -12,7 +16,7 @@ itti_driver = webdriver.Chrome()
 sasto_driver = webdriver.Chrome()
 
 # Name of the CSV file
-filename = 'laptops.csv'
+filename = 'test.csv'
 
 # navigate to the website
 daraz_url = 'https://www.daraz.com.np/dell/?from=filter&q=laptops'
@@ -56,7 +60,7 @@ def get_daraz_data():
         img_element = laptop.find('div', {'class': 'img--VQr82'})
         img = img_element.find('img')
         img_link = img.get('src')
-        store_img_link = 'https://www.daraz.com.np/products/lenovo-legion-5-ryzen-5-4600h-gtx-1650ti-8gb-ram-256gb-ssd-1tb-hdd-156-120hz-display-i118886063-s1032553910.html?spm=a2a0e.searchlist.list.6.38126940J490bI&search=1'
+        store_img_link = 'https://superdesk-pro-c.s3.amazonaws.com/sd-nepalitimes/20221109141144/636baf8d9c7e80680e078059png.png'
         # click on the laptop to open its product page
         # link_div = laptop.find('div', {'class': 'title--wFj93'})
         # laptop_link = link_div.find('a').get('href')
@@ -210,7 +214,7 @@ def get_sasto_data():
                 'span', {'class': 'product-image-wrapper'})
             img = img_element.find('img')
             img_link = img.get('src')
-            store_img_link = 'https://www.sastodeal.com/lenovo-legion-5-ryzen-7-5800h-rtx-3050ti-8gb-ram-512gb-ssd-15-6-fhd-display-tech-store-0147852.html'
+            store_img_link = 'https://s3-us-west-2.amazonaws.com/cbi-image-service-prd/modified/6267e600-c16f-4a47-8be1-c2e511ae0498.png'
             # click on the laptop to open its product page
             # laptop_link = laptop.find(
             #     'a', {'class': 'product-item-link'}).get('href')
@@ -265,16 +269,28 @@ def get_sasto_data():
             break
 
 
-def main():
-    get_daraz_data()
-    get_itti_data()
-    get_sasto_data()
+def similar_names():
+    # Calculate similarity between each pair of names in the list
+    for i in range(len(all_laptops)):
+        for j in range(i+1, len(all_laptops)):
+            name1 = all_laptops[i]['name']
+            name2 = all_laptops[j]['name']
+            store1 = all_laptops[i]['store']
+            store2 = all_laptops[j]['store']
+            if store1 != store2:
+                similarity_score = levenshtein.similarity(name1, name2)
+                if similarity_score > 0.95:
+                    # Rename the second laptop to have the same name as the first
+                    all_laptops[j]['name'] = name1
 
+
+def add_to_csv(fname):
     # Check if file exists
-    file_exists = os.path.isfile(filename)
+    print('abc')
+    file_exists = os.path.isfile(fname)
 
     # Write data to CSV file
-    with open(filename, 'a', newline='', encoding="utf-8") as csvfile:
+    with open(fname, 'a', newline='', encoding="utf-8") as csvfile:
         # use keys from first dictionary as fieldnames
         fieldnames = all_laptops[0].keys()
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -284,6 +300,34 @@ def main():
 
         for row in all_laptops:
             writer.writerow(row)  # write each row of data
+
+
+def main():
+    # scraping data
+    get_daraz_data()
+    get_itti_data()
+    get_sasto_data()
+
+    add_to_csv('before.csv')
+
+    # standardizing names
+    similar_names()
+
+    add_to_csv(filename)
+
+    # name_dict = {}
+
+    # for laptop in all_laptops:
+    #     name = laptop['name']
+    #     store = laptop['store']
+    #     if name in name_dict:
+    #         name_dict[name].append(store)
+    #     else:
+    #         name_dict[name] = [store]
+
+    # for name, stores in name_dict.items():
+    #     if len(stores) > 1:
+    #         print("Name: " + name + ", Stores: " + ", ".join(stores))
 
 
 main()
