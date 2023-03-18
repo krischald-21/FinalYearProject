@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
+  Badge,
   Button,
   Card,
   CardBody,
@@ -120,6 +121,9 @@ class ProductCards extends React.Component {
           </CardTitle>
           <CardBody>
             <CardHeader>{e.productName}</CardHeader>
+            <Row>
+              <Chips productId={e.productId} />
+            </Row>
             <Link
               to={"/product-details/" + e.productId}
               state={{ id: e.productId, searchParams: this.state.searchParams }}
@@ -128,6 +132,36 @@ class ProductCards extends React.Component {
             </Link>
           </CardBody>
         </Card>
+      </Col>
+    ));
+  }
+}
+
+class Chips extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      productId: this.props.productId,
+    };
+  }
+
+  async componentDidMount() {
+    await axios
+      .get("https://localhost:7005/api/SameProduct/" + this.state.productId)
+      .then((res) => {
+        this.setState({
+          data: res.data,
+          isEmpty: res.data.length === 0,
+        });
+      })
+      .catch((e) => console.log(e));
+  }
+
+  render() {
+    return this.state.data.map((e) => (
+      <Col key={e.storeProductId} lg="4">
+        <Badge color="dark">{e.store.storeName}</Badge>
       </Col>
     ));
   }
