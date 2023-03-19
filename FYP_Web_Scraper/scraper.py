@@ -7,9 +7,10 @@ from strsimpy.jaro_winkler import JaroWinkler
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from difflib import SequenceMatcher
 
-# initializing normalized levenshtein object
-levenshtein = JaroWinkler()
+# initializing normalized jaro_winkler object
+jaro_winkler = JaroWinkler()
 
 # set up the Chrome daraz_driver
 daraz_driver = webdriver.Chrome()
@@ -20,13 +21,13 @@ sasto_driver = webdriver.Chrome()
 filename = 'laptops.csv'
 
 # navigate to the website
-daraz_url = 'https://www.daraz.com.np/laptops/lenovo/?spm=a2a0e.searchlistcategory.cate_5_4.3.31ab4969PrBAsd'
+daraz_url = 'https://www.daraz.com.np/laptops/dell/?spm=a2a0e.11779170.cate_5_4.2.287d2d2b8zLTJj'
 daraz_driver.get(daraz_url)
 
-itti_url = 'https://itti.com.np/laptops-by-brands/lenovo-laptops-nepal'
+itti_url = 'https://itti.com.np/laptops-by-brands/dell'
 itti_driver.get(itti_url)
 
-sasto_url = 'https://www.sastodeal.com/electronic/laptops/lenovo.html'
+sasto_url = 'https://www.sastodeal.com/electronic/laptops/dell.html'
 sasto_driver.get(sasto_url)
 time.sleep(3)
 
@@ -35,6 +36,25 @@ all_laptops = []
 daraz_laptop_data = []
 itti_laptop_data = []
 sasto_laptop_data = []
+
+
+def create_ngrams(text, n):
+    """Create n-grams of a string."""
+    # Replace / and - characters with spaces
+    text = text.replace('/', ' ').replace('-', ' ')
+
+    # Convert the text to lowercase and remove any non-alphabetic characters
+    text = ''.join(c.lower() for c in text if c.isalpha() or c.isspace())
+
+    # Split the text into words
+    words = text.split()
+
+    # Create the n-grams
+    ngrams = []
+    for i in range(len(words) - n + 1):
+        ngrams.append(' '.join(words[i:i+n]))
+
+    return ngrams
 
 
 def get_daraz_data():
@@ -289,6 +309,15 @@ def get_sasto_data():
             break
 
 
+def string_similarity(string1, string2):
+    """Calculate the similarity between two strings in a list of strings."""
+    # Calculate the similarity between the two strings at indices i and j
+    matcher = SequenceMatcher(None, string1, string2)
+    similarity = matcher.ratio()
+
+    return similarity
+
+
 def similar_names():
     # Calculate similarity between each pair of names in the list
     for i in range(len(all_laptops)):
@@ -298,7 +327,7 @@ def similar_names():
             store1 = all_laptops[i]['store']
             store2 = all_laptops[j]['store']
             if store1 != store2:
-                similarity_score = levenshtein.similarity(name1, name2)
+                similarity_score = string_similarity(name1, name2)
                 if similarity_score > 0.95:
                     # Rename the second laptop to have the same name as the first
                     all_laptops[j]['name'] = name1
@@ -333,19 +362,19 @@ def scrape():
 
     add_to_csv(filename)
 
-    # name_dict = {}
+    name_dict = {}
 
-    # for laptop in all_laptops:
-    #     name = laptop['name']
-    #     store = laptop['store']
-    #     if name in name_dict:
-    #         name_dict[name].append(store)
-    #     else:
-    #         name_dict[name] = [store]
+    for laptop in all_laptops:
+        name = laptop['name']
+        store = laptop['store']
+        if name in name_dict:
+            name_dict[name].append(store)
+        else:
+            name_dict[name] = [store]
 
-    # for name, stores in name_dict.items():
-    #     if len(stores) > 1:
-    #         print("Name: " + name + ", Stores: " + ", ".join(stores))
+    for name, stores in name_dict.items():
+        if len(stores) > 1:
+            print("Name: " + name + ", Stores: " + ", ".join(stores))
 
 
 scrape()
