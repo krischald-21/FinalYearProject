@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Folders\\Coursework\\Year_3\\Final Year Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj": {}
+    "D:\\Folders\\Coursework\\Year_3\\Final_Year_Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj": {}
   },
   "projects": {
-    "D:\\Folders\\Coursework\\Year_3\\Final Year Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj": {
+    "D:\\Folders\\Coursework\\Year_3\\Final_Year_Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Folders\\Coursework\\Year_3\\Final Year Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj",
+        "projectUniqueName": "D:\\Folders\\Coursework\\Year_3\\Final_Year_Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj",
         "projectName": "FYP_Backend",
-        "projectPath": "D:\\Folders\\Coursework\\Year_3\\Final Year Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj",
+        "projectPath": "D:\\Folders\\Coursework\\Year_3\\Final_Year_Project\\Project_Code\\FYP_Backend\\FYP_Backend.csproj",
         "packagesPath": "C:\\Users\\krisc\\.nuget\\packages\\",
-        "outputPath": "D:\\Folders\\Coursework\\Year_3\\Final Year Project\\Project_Code\\FYP_Backend\\obj\\",
+        "outputPath": "D:\\Folders\\Coursework\\Year_3\\Final_Year_Project\\Project_Code\\FYP_Backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\krisc\\AppData\\Roaming\\NuGet\\NuGet.Config",

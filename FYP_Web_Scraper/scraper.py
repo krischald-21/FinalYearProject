@@ -20,16 +20,38 @@ sasto_driver = webdriver.Chrome()
 # Name of the CSV file
 filename = 'laptops.csv'
 
+
+def goto_daraz_url(url):
+    daraz_driver.get(url)
+
+
+def goto_itti_url(url):
+    itti_driver.get(url)
+
+
+def goto_sasto_url(url):
+    sasto_driver.get(url)
+
+
 # navigate to the website
-daraz_url = 'https://www.daraz.com.np/laptops/dell/?spm=a2a0e.11779170.cate_5_4.2.287d2d2b8zLTJj'
-daraz_driver.get(daraz_url)
+daraz_urls = [
+    'https://www.daraz.com.np/laptops/dell/?spm=a2a0e.11779170.cate_5_4.2.287d2d2b8zLTJj',
+    'https://www.daraz.com.np/laptops/lenovo/?spm=a2a0e.11779170.cate_5_4.3.287d2d2bffP7z2',
+    'https://www.daraz.com.np/laptops/acer/?spm=a2a0e.searchlistcategory.cate_5_4.4.60674969bllWbz'
+]
 
-itti_url = 'https://itti.com.np/laptops-by-brands/dell'
-itti_driver.get(itti_url)
+itti_urls = [
+    'https://itti.com.np/laptops-by-brands/dell',
+    'https://itti.com.np/laptops-by-brands/lenovo-laptops-nepal',
+    'https://itti.com.np/laptops-by-brands/acer-laptop-nepal'
+]
 
-sasto_url = 'https://www.sastodeal.com/electronic/laptops/dell.html'
-sasto_driver.get(sasto_url)
-time.sleep(3)
+sasto_urls = [
+    'https://www.sastodeal.com/electronic/laptops/dell.html',
+    'https://www.sastodeal.com/electronic/laptops/lenovo.html',
+    'https://www.sastodeal.com/electronic/laptops/acer.html'
+]
+
 
 # create an empty list to store the laptop data
 all_laptops = []
@@ -89,33 +111,6 @@ def get_daraz_data():
         img = img_element.find('img')
         img_link = img.get('src')
         store_img_link = 'https://superdesk-pro-c.s3.amazonaws.com/sd-nepalitimes/20221109141144/636baf8d9c7e80680e078059png.png'
-        # click on the laptop to open its product page
-        # link_div = laptop.find('div', {'class': 'title--wFj93'})
-        # laptop_link = link_div.find('a').get('href')
-        # daraz_driver.get('https:'+laptop_link)
-
-        # get the HTML content of the product page
-        # html = daraz_driver.page_source
-
-        # # create a BeautifulSoup object for the product page
-        # soup = BeautifulSoup(html, 'html.parser')
-
-        # specs = soup.find_all('li', {'class': 'key-li'})
-        # display_size = 'Not Available'
-        # processor = 'Not Available'
-        # ram = 'Not Available'
-
-        # for spec in specs:
-        #     spec_title = spec.find('span').text.strip().lower()
-        #     spec_value = spec.find('div').text.strip().lower()
-        #     if spec_title == 'brand':
-        #         brand = spec_value
-        #     elif spec_title == 'display size':
-        #         display_size = spec_value.replace(' inch', '')
-        #     elif spec_title == 'ram memory':
-        #         ram = spec_value.replace('gb', '')
-        #     elif spec_title == 'processor':
-        #         processor = spec_value
 
         daraz_laptop_data.append({
             'name': name,
@@ -168,36 +163,6 @@ def get_itti_data():
         img = img_element.find('img')
         img_link = img.get('src')
         store_img_link = 'https://itti.com.np/lenovo-legion-5-ryzen-5-price-nepal'
-        # click on the laptop to open its product page
-        # laptop_link = laptop.find(
-        #     'a', {'class': 'product-item-link'}).get('href')
-        # itti_driver.get(laptop_link)
-        # time.sleep(3)
-
-        # get the HTML content of the product page
-        # html = itti_driver.page_source
-
-        # # create a BeautifulSoup object for the product page
-        # soup = BeautifulSoup(html, 'html.parser')
-
-        # specs = soup.find_all('tr')
-        # brand = name.split()[0]
-        # display_size = 'Not Available'
-        # processor = 'Not Available'
-        # ram = 'Not Available'
-
-        # for spec in specs:
-        #     spec_title = spec.select('tr > td')[0].get_text(strip=True).lower()
-        #     try:
-        #         spec_value = spec.find('span').text.strip()
-        #     except:
-        #         spec_value = 'NA'
-        #     if spec_title == 'cpu':
-        #         processor = spec_value
-        #     elif spec_title == 'display':
-        #         display_size = spec_value
-        #     elif spec_title == 'memory':
-        #         ram = spec_value
 
         itti_laptop_data.append({
             'name': name,
@@ -255,37 +220,6 @@ def get_sasto_data():
             img = img_element.find('img')
             img_link = img.get('src')
             store_img_link = 'https://s3-us-west-2.amazonaws.com/cbi-image-service-prd/modified/6267e600-c16f-4a47-8be1-c2e511ae0498.png'
-            # click on the laptop to open its product page
-            # laptop_link = laptop.find(
-            #     'a', {'class': 'product-item-link'}).get('href')
-            # sasto_driver.get(laptop_link)
-            # time.sleep(3)
-
-            # # get the HTML content of the product page
-            # html = sasto_driver.page_source
-
-            # # create a BeautifulSoup object for the product page
-            # soup = BeautifulSoup(html, 'html.parser')
-
-            # specs = soup.find_all('tr')
-            # display_size = 'Not Available'
-            # processor = 'Not Available'
-            # ram = 'Not Available'
-
-            # for spec in specs:
-            #     spec_title = spec.select('tr > td')[
-            #         0].get_text(strip=True).lower()
-            #     try:
-            #         spec_value = spec.select('tr > td')[
-            #             1].get_text(strip=True).lower()
-            #     except:
-            #         spec_value = 'NA'
-            #     if spec_title == 'processor' or spec_title == 'cpu':
-            #         processor = spec_value
-            #     elif spec_title == 'display size' or spec_title == 'display':
-            #         display_size = spec_value
-            #     elif spec_title == 'ram' or spec_title == 'memory':
-            #         ram = spec_value
 
             sasto_laptop_data.append({
                 'name': name,
@@ -352,10 +286,20 @@ def add_to_csv(fname):
 
 
 def scrape():
-    # scraping data
-    get_daraz_data()
-    get_itti_data()
-    get_sasto_data()
+    for i in range(len(daraz_urls)):
+        daraz_url = daraz_urls[i]
+        itti_url = itti_urls[i]
+        sasto_url = sasto_urls[i]
+
+        goto_daraz_url(daraz_url)
+        goto_itti_url(itti_url)
+        goto_sasto_url(sasto_url)
+        time.sleep(3)
+
+        # scraping data
+        get_daraz_data()
+        get_itti_data()
+        get_sasto_data()
 
     # standardizing names
     similar_names()
