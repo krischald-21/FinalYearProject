@@ -12,7 +12,11 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/products" element={<Products />} />
+          <Route
+            exact
+            path="/products"
+            element={<Products itemsPerPage={12} />}
+          />
           <Route
             exact
             path="/product-details/:id"

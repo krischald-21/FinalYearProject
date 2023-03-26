@@ -17,7 +17,7 @@ import axios from "axios";
 
 const ContactForm = () => {
   const [fullname, setFullname] = useState("");
-  const [messageSubject, setMessageSubject] = useState("New User Registration");
+  const [messageSubject, setMessageSubject] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [messageBody, setMessageBody] = useState("");
 

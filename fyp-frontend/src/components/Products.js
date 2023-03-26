@@ -16,126 +16,109 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
+import ReactPaginate from "react-paginate";
 
-const Products = (props) => {
-  const [data, setData] = useState([]);
-  const [isEmpty, setIsEmpty] = useState(false);
-
+const Products = ({ itemsPerPage }) => {
   const baseUrl = "https://localhost:7005/";
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("q"));
-  const searched = searchParams.get("q");
-  const history = useNavigate();
+  const searchTerm = searchParams.get("q");
+
+  const fetchSearchResults = async (query) => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}api/SearchProducts/${searchTerm}`
+      );
+      setItems(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    getSearchResult(searchTerm);
+    fetchSearchResults(searchTerm);
   }, [searchTerm]);
+  console.log(items);
 
-  const getSearchResult = (searchTerm) => {
-    axios
-      .get(`${baseUrl}api/SearchProducts/${searchTerm}`)
-      .then((res) => {
-        setData(res.data);
-        setIsEmpty(res.data.length === 0);
-      })
-      .catch((e) => console.log(e));
-  };
-  console.log(data);
-  const changeHandler = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const [itemOffset, setItemOffset] = useState(0);
 
-  const submitHandler = (e) => {
-    getSearchResult(searchTerm);
-    history(`/products?q=${encodeURIComponent(searchTerm)}`);
-    window.location.reload();
+  // Simulate fetching items from another resources.
+  // (This could be items from props; or items loaded in a local state
+  // from an API endpoint with useEffect and useState)
+  const endOffset = itemOffset + itemsPerPage;
+  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+  const currentItems = items.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(items.length / itemsPerPage);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % items.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
   };
 
   return (
-    <div className="search-result">
+    <div>
       <NavBar />
       <SearchBar searchParams={searchParams.get("q")} />
-
-      <Container className="search-content p-4">
-        <Row className="mt-3">
-          <h1 className="h3">Search Results for '{searched}'</h1>
-        </Row>
-        <hr className="hr-line" />
+      <Container>
         <Row>
-          <ProductCards
-            searchTerm={searchTerm}
-            searchParams={searchParams.get("q")}
-          />
+          <Items currentItems={currentItems} searchParams={searchTerm} />
         </Row>
+        <ReactPaginate
+          className="pagination"
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+        />
       </Container>
     </div>
   );
 };
 
-class ProductCards extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      searchTerm: this.props.searchTerm,
-      isEmpty: false,
-      searchParams: this.props.searchParams,
-    };
-  }
-
-  async componentDidMount() {
-    await axios
-      .get("https://localhost:7005/api/SearchProducts/" + this.state.searchTerm)
-      .then((res) => {
-        this.setState({
-          data: res.data,
-          isEmpty: res.data.length === 0,
-        });
-      })
-      .catch((e) => console.log(e));
-  }
-
-  render() {
-    console.log(this.state.data);
-    console.log(this.state.searchTerm);
-    console.log(this.state.isEmpty);
-    if (this.state.isEmpty) {
-      return (
-        <Col lg="12">
-          <h2 className="h4">
-            Sorry! No results found for {this.state.searchTerm}
-          </h2>
-        </Col>
-      );
-    }
-    return this.state.data.map((e) => (
-      <Col key={e.productId} lg="4">
-        <Card className="mb-3" style={{ overflow: "hidden" }}>
-          <CardTitle>
-            <img
-              src={e.imgLink}
-              alt={e.productName}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </CardTitle>
-          <CardBody>
-            <CardHeader>{e.productName}</CardHeader>
-            <Row>
-              <Chips productId={e.productId} />
-            </Row>
-            <Link
-              to={"/product-details/" + e.productId}
-              state={{ id: e.productId, searchParams: this.state.searchParams }}
-            >
-              <button className="buton mt-3 p-2">Compare Prices</button>
-            </Link>
-          </CardBody>
-        </Card>
-      </Col>
-    ));
-  }
-}
+const Items = ({ currentItems, searchParams }) => {
+  return (
+    <>
+      {currentItems &&
+        currentItems.map((e) => (
+          <Col key={e.productId} lg="4">
+            <Card className="mb-3" style={{ overflow: "hidden" }}>
+              <CardTitle>
+                <img
+                  src={e.imgLink}
+                  alt={e.productName}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </CardTitle>
+              <CardBody>
+                <CardHeader>{e.productName}</CardHeader>
+                <Row>
+                  <Chips productId={e.productId} />
+                </Row>
+                <Link
+                  to={"/product-details/" + e.productId}
+                  state={{
+                    id: e.productId,
+                    searchParams: searchParams,
+                  }}
+                >
+                  <button className="buton mt-3 p-2">Compare Prices</button>
+                </Link>
+              </CardBody>
+            </Card>
+          </Col>
+        ))}
+    </>
+  );
+};
 
 class Chips extends React.Component {
   constructor(props) {

@@ -97,6 +97,42 @@
   border-color: #8e3ac9;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.pagination li {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.pagination li a,
+.pagination li span {
+  display: block;
+  padding: 0.5rem;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pagination li a:hover,
+.pagination li a:focus,
+.pagination li span:hover,
+.pagination li span:focus {
+  background-color: #ccc;
+}
+
+.pagination li a.is-active,
+.pagination li span.is-active {
+  background-color: #8e3ac9;
+  color: #fff;
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
