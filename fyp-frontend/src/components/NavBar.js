@@ -20,7 +20,7 @@ function NavBar() {
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink id="navLink" href="/">
+            <NavLink id="navLink" href="/contact-form">
               Contact
             </NavLink>
           </NavItem>

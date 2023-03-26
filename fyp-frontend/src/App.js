@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Products from "./components/Products";
 import ProductDetail from "./components/ProductDetail";
+import ContactForm from "./components/ContactForm";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             path="/product-details/:id"
             element={<ProductDetail />}
           />
+          <Route exact path="/contact-form" element={<ContactForm />} />
         </Routes>
       </Router>
     </div>

@@ -77,6 +77,26 @@
   color: #8e3ac9;
 }
 
+.contact-tf, .contact-ta{
+  outline: none;
+  border: none;
+  border-bottom: 3px solid #969696;
+  margin: 1.5em 0;
+
+}
+
+.contact-tf{
+  height: 2.75rem;
+}
+
+.contact-ta{
+  height: 6em;
+}
+
+.contact-ta:focus, .contact-tf:focus{
+  border-color: #8e3ac9;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

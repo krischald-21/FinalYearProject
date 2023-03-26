@@ -24,7 +24,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<IRepository, Repository>();
 
-GlobalVariables.MessagePass = builder.Configuration.GetSection("GmailPass").Value;
+GlobalVariables.MessagePass = builder.Configuration.GetSection("SmtpCredentials:GmailPass").Value;
+GlobalVariables.EmailAddress = builder.Configuration.GetSection("SmtpCredentials:EmailAdd").Value;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
