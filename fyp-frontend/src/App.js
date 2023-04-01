@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import Products from "./components/Products";
 import ProductDetail from "./components/ProductDetail";
 import ContactForm from "./components/ContactForm";
+import RegisterForm from "./components/RegisterForm";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             element={<ProductDetail />}
           />
           <Route exact path="/contact-form" element={<ContactForm />} />
+          <Route exact path="/register-form" element={<RegisterForm />} />
         </Routes>
       </Router>
     </div>

@@ -20,6 +20,9 @@ const ContactForm = () => {
   const [messageSubject, setMessageSubject] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [messageBody, setMessageBody] = useState("");
+  const [disableBtn, setDisableBtn] = useState(false);
+  const [disableId, setDisableId] = useState("");
+  const [disableText, setDisableText] = useState("Submit");
 
   const [alert, setAlert] = useState(null);
 
@@ -72,6 +75,9 @@ const ContactForm = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    setDisableBtn(true);
+    setDisableText("Submitting");
+    setDisableId("btn-disabled");
 
     axios
       .post("https://localhost:7005/api/Message", {
@@ -92,6 +98,7 @@ const ContactForm = () => {
             message:
               "There has been an error in sending message. Please try again later!!",
           });
+          console.log(res);
         }
       })
       .catch((e) => {
@@ -167,13 +174,13 @@ const ContactForm = () => {
                     <Col lg="12">
                       <button
                         className="buton"
-                        style={{ padding: "0.5em 1em" }}
+                        style={{
+                          padding: "0.5em 1em",
+                        }}
+                        id={disableId}
+                        disabled={disableBtn}
                       >
-                        {console.log(fullname)}
-                        {console.log(messageSubject)}
-                        {console.log(emailAddress)}
-                        {console.log(messageBody)}
-                        Submit
+                        {disableText}
                       </button>
                     </Col>
                   </Row>

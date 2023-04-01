@@ -24,6 +24,16 @@ function NavBar() {
               Contact
             </NavLink>
           </NavItem>
+          <NavItem>
+            <NavLink id="navLink" href="/register-form">
+              <button className="buton">Register</button>
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink id="navLink" href="/login-form">
+              <button className="buton">Login</button>
+            </NavLink>
+          </NavItem>
         </Nav>
       </Navbar>
     </div>

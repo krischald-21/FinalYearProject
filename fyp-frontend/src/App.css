@@ -17,6 +17,7 @@
   color: white;
   border-style: none;
   border-radius: 5px;
+  padding: 0.25em 0.5em;
 }
 
 .buton:hover{
@@ -50,6 +51,14 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.eye-icon{
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -130,6 +139,9 @@
   color: #fff;
 }
 
+button#btn-disabled{
+  background-color: #be8fe0;
+}
 
 
 @keyframes App-logo-spin {

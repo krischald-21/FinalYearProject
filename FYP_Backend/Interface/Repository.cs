@@ -67,6 +67,12 @@ namespace FYP_Backend.Interface
 
 		public async Task RegisterUser(UserModel userModel)
 		{
+			var getUser = await _context.Users.Where(x => x.UserEmail == userModel.UserEmail).FirstOrDefaultAsync();
+
+			if(getUser != null)
+			{
+				return;
+			}
 			//Generating a random salt
 			byte[] salt = new byte[16];
 			new RNGCryptoServiceProvider().GetBytes(salt);

@@ -109,8 +109,36 @@ namespace FYP_Backend.Controllers
         [Route("~/api/Register")]
         public async Task<ActionResult<Users>> UserRegistration(UserModel userModel)
         {
-            await _repository.RegisterUser(userModel);
-            return CreatedAtAction("GetUsers", new {id =  userModel.UserId}, userModel);
+			var getUser = await _context.Users.Where(x => x.UserEmail == userModel.UserEmail).FirstOrDefaultAsync();
+
+			if (getUser != null)
+			{
+				return NotFound();
+			}
+			//Generating a random salt
+			byte[] salt = new byte[16];
+			new RNGCryptoServiceProvider().GetBytes(salt);
+
+			//Hashing the password with the salt using PBKDF2
+			byte[] hashedPassword = new Rfc2898DeriveBytes(userModel.UserPassword, salt, 10000).GetBytes(20);
+
+			//Converting the salt and the hashed password to base64 strings for storing in the database
+			string saltString = Convert.ToBase64String(salt);
+			string hashedPasswordString = Convert.ToBase64String(hashedPassword);
+
+			//Creating a new User object with hashed password and salt
+			Users user = new()
+			{
+				UserFullName = userModel.UserFullName,
+				UserEmail = userModel.UserEmail,
+				UserPassword = hashedPasswordString,
+				UserTypeId = userModel.UserTypeId,
+				Salt = saltString
+			};
+
+			this._context.Add(user);
+			_ = await this._context.SaveChangesAsync();
+			return CreatedAtAction("GetUsers", new {id =  userModel.UserId}, userModel);
         }
 
         //GET: api/Login
