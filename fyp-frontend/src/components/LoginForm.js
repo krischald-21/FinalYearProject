@@ -15,25 +15,20 @@ import { useNavigate } from "react-router-dom";
 import ReactBSAlert from "react-bootstrap-sweetalert";
 import axios from "axios";
 
-const RegisterForm = () => {
-  const [fullname, setFullname] = useState("");
+const LoginForm = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showCPassword, setShowCPassword] = useState(false);
-  const [btnText, setBtnText] = useState("Register");
+  const [btnText, setBtnText] = useState("Log In");
   const [disableId, setDisableId] = useState("");
   const [disableBtn, setDisableBtn] = useState(false);
   const [validation, setValidation] = useState("");
+  const [name, setName] = useState("");
 
   const [alert, setAlert] = useState(null);
 
   const showPassHandler = () => {
     setShowPassword((e) => !e);
-  };
-  const showCPassHandler = () => {
-    setShowCPassword((e) => !e);
   };
 
   const successAlert = (props) => {
@@ -72,82 +67,62 @@ const RegisterForm = () => {
 
   const navigate = useNavigate();
 
-  const fullnameChange = (e) => {
-    setFullname(e.target.value);
-  };
   const passwordChange = (e) => {
     setPassword(e.target.value);
   };
   const emailAddressChange = (e) => {
     setEmailAddress(e.target.value);
   };
-  const confirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+    setBtnText("Logging In");
     setDisableBtn(true);
-    setBtnText("Registering");
     setDisableId("btn-disabled");
 
-    if (password === confirmPassword) {
-      if (password.length < 8) {
-        setValidation("Passwords should have at least 8 characters!!");
-        setBtnText("Register");
-        setDisableId("");
-        setDisableBtn(false);
-      } else {
-        axios
-          .post("https://localhost:7005/api/Register", {
-            userFullName: fullname,
-            userEmail: emailAddress,
-            userTypeId: 1,
-            userPassword: password,
-          })
-          .then((res) => {
-            if (200 <= res.status && res.status < 300) {
-              successAlert({
-                title: "Registered",
-                message: "New user has been registered!",
-              });
-            } else {
-              warningAlert({
-                title: "Registration Failed",
-                message:
-                  "There has been an error in registering the user. Please try again later!!",
-              });
-              setBtnText("Register");
-              setDisableId("");
-              setValidation("");
-              setDisableBtn(false);
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-            if (e.response.status && e.response.status == 404) {
-              warningAlert({
-                title: "Registration Failed",
-                message: "User with the email already exists!!",
-              });
-            } else {
-              warningAlert({
-                title: "Registration Failed",
-                message: "Registration failed due to network error!!",
-              });
-            }
-
-            setBtnText("Register");
-            setDisableId("");
+    if (password.length < 8) {
+      setValidation("Password should be at least 8 characters!!");
+      setBtnText("Log In");
+      setDisableBtn(false);
+      setDisableId("");
+    } else {
+      await axios
+        .post("https://localhost:7005/api/Login", {
+          userEmail: emailAddress,
+          userPassword: password,
+        })
+        .then((res) => {
+          setName(res.data.userFullName);
+          localStorage.setItem("user-info", JSON.stringify(res.data));
+          console.log(res.data.userFullName);
+          if (200 <= res.status && res.status < 300) {
+            successAlert({
+              title: "Logged In",
+              message: "User logged in successfully!",
+            });
+          } else {
+            warningAlert({
+              title: "Log In Failed",
+              message:
+                "There has been an error in logging in the user. Please try again later!!",
+            });
+            setBtnText("Log In");
             setDisableBtn(false);
             setValidation("");
+            setDisableId("");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          warningAlert({
+            title: "Registration Failed",
+            message: "Registration failed due to network error!!",
           });
-      }
-    } else {
-      setValidation("Passwords do not match!!");
-      setBtnText("Register");
-      setDisableId("");
-      setDisableBtn(false);
+          setBtnText("Log In");
+          setDisableBtn(false);
+          setValidation("");
+          setDisableId("");
+        });
     }
   };
 
@@ -167,20 +142,9 @@ const RegisterForm = () => {
             >
               <Container>
                 <CardTitle>
-                  <h1 className="h3 p-2">Register User</h1>
+                  <h1 className="h3 p-2">Log In</h1>
                 </CardTitle>
                 <CardBody>
-                  <Row>
-                    <input
-                      type="text"
-                      max={255}
-                      placeholder="Full name"
-                      value={fullname}
-                      className="contact-tf"
-                      onChange={fullnameChange}
-                      required
-                    />
-                  </Row>
                   <Row>
                     <input
                       type="email"
@@ -208,7 +172,7 @@ const RegisterForm = () => {
                         onClick={showPassHandler}
                         style={{
                           position: "absolute",
-                          top: "53%",
+                          top: "56%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -221,45 +185,7 @@ const RegisterForm = () => {
                         onClick={showPassHandler}
                         style={{
                           position: "absolute",
-                          top: "53%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    )}
-                  </Row>
-                  <Row>
-                    <input
-                      type={showCPassword ? "text" : "password"}
-                      placeholder="Confirm Password"
-                      value={confirmPassword}
-                      min="8"
-                      className="contact-tf"
-                      onChange={confirmPasswordChange}
-                      required
-                    />
-                    {showCPassword ? (
-                      <span
-                        className="material-icons eye-icon"
-                        onClick={showCPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "69%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    ) : (
-                      <span
-                        className="material-icons-outlined eye-icon"
-                        onClick={showCPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "69%",
+                          top: "56%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -293,4 +219,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

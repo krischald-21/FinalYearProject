@@ -141,16 +141,13 @@ namespace FYP_Backend.Controllers
 			return CreatedAtAction("GetUsers", new {id =  userModel.UserId}, userModel);
         }
 
-        //GET: api/Login
-        [HttpGet]
+        //POST: api/Login
+        [HttpPost]
         [Route("~/api/Login")]
-        public async Task<ActionResult> UserLogin()
+        public async Task<ActionResult<UserLoggedIn>> UserLogin(UserLogin userLogin)
         {
-            const string email = "userEmail";
-            const string password = "userPassword";
-
-            Request.Headers.TryGetValue(email, out var userEmail);
-            Request.Headers.TryGetValue(password, out var userPassword);
+            string userEmail = userLogin.UserEmail;
+            string userPassword = userLogin.UserPassword;
 
             string userEmailAddress = userEmail.ToString();
 
@@ -171,7 +168,13 @@ namespace FYP_Backend.Controllers
                 return Unauthorized(new { message = "INVALID_PASSWORD", loggedIn = false });
             }
 
-            return Ok(new {message = "LOGIN_SUCCESS", loggedIn = true, userId = userDetail.UserId});
+
+
+            return Ok(new UserLoggedIn
+            {
+                UserEmail = userEmail,
+                UserFullName = userDetail.UserFullName
+            });
         }
 
     }
