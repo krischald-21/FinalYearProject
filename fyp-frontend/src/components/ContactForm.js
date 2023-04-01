@@ -43,7 +43,7 @@ const ContactForm = () => {
   const warningAlert = (props) => {
     setAlert(
       <ReactBSAlert
-        success
+        warning
         style={{ display: "block" }}
         title={props.title}
         confirmBtnBsStyle="warning"

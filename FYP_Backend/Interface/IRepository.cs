@@ -1,8 +1,9 @@
 ﻿using FYP_Backend.Models;
+using FYP_Backend.Models.DTOs;
 
 namespace FYP_Backend.Interface
 {
-	public interface IRepository
+    public interface IRepository
 	{
 		Task<List<T>> SelectAll<T>() where T : class;
 		Task<T> SelectById<T>(int id) where T: class;
@@ -13,5 +14,6 @@ namespace FYP_Backend.Interface
 		Task<StoreProducts> GetStoreProductsById(int id);
 		Task<List<StoreProducts>> GetSameProducts(int id);
 		Task<List<Products>> GetProducts(string name);
+		Task RegisterUser(UserModel userModel);
 	}
 }

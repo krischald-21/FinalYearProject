@@ -1,10 +1,12 @@
 ﻿using FYP_Backend.Data;
 using FYP_Backend.Models;
+using FYP_Backend.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace FYP_Backend.Interface
 {
-	public class Repository : IRepository
+    public class Repository : IRepository
 	{
 		private readonly FYP_BackendContext _context;
 
@@ -61,6 +63,33 @@ namespace FYP_Backend.Interface
 		public async Task<List<Products>> GetProducts(string name)
 		{
 			return await _context.Products.Where(x => x.ProductName.StartsWith(name)).ToListAsync();
+		}
+
+		public async Task RegisterUser(UserModel userModel)
+		{
+			//Generating a random salt
+			byte[] salt = new byte[16];
+			new RNGCryptoServiceProvider().GetBytes(salt);
+
+			//Hashing the password with the salt using PBKDF2
+			byte[] hashedPassword = new Rfc2898DeriveBytes(userModel.UserPassword, salt, 10000).GetBytes(20);
+
+			//Converting the salt and the hashed password to base64 strings for storing in the database
+			string saltString = Convert.ToBase64String(salt);
+			string hashedPasswordString = Convert.ToBase64String(hashedPassword);
+
+			//Creating a new User object with hashed password and salt
+			Users user = new()
+			{
+				UserFullName = userModel.UserFullName,
+				UserEmail = userModel.UserEmail,
+				UserPassword = hashedPasswordString,
+				UserTypeId = userModel.UserTypeId,
+				Salt = saltString
+			};
+
+			this._context.Add(user);
+			_ = await this._context.SaveChangesAsync();
 		}
 	}
 }

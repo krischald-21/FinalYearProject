@@ -125,8 +125,7 @@
   background-color: #ccc;
 }
 
-.pagination li a.is-active,
-.pagination li span.is-active {
+.pagination li.selected {
   background-color: #8e3ac9;
   color: #fff;
 }

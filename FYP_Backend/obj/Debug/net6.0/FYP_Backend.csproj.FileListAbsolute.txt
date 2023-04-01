@@ -538,3 +538,4 @@ D:\Folders\Coursework\Year_3\Final_Year_Project\Project_Code\FYP_Backend\obj\Deb
 D:\Folders\Coursework\Year_3\Final_Year_Project\Project_Code\FYP_Backend\obj\Debug\net6.0\FYP_Backend.pdb
 D:\Folders\Coursework\Year_3\Final_Year_Project\Project_Code\FYP_Backend\obj\Debug\net6.0\FYP_Backend.genruntimeconfig.cache
 D:\Folders\Coursework\Year_3\Final_Year_Project\Project_Code\FYP_Backend\obj\Debug\net6.0\ref\FYP_Backend.dll
+D:\Folders\Coursework\Year_3\Final_Year_Project\Project_Code\FYP_Backend\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
