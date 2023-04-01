@@ -9,6 +9,8 @@ using FYP_Backend.Data;
 using FYP_Backend.Models;
 using FYP_Backend.Interface;
 using FYP_Backend.Models.DTOs;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace FYP_Backend.Controllers
 {
@@ -103,12 +105,46 @@ namespace FYP_Backend.Controllers
         }
 
         //POST: api/Register
-        [Route("~/api/Register")]
         [HttpPost]
+        [Route("~/api/Register")]
         public async Task<ActionResult<Users>> UserRegistration(UserModel userModel)
         {
             await _repository.RegisterUser(userModel);
             return CreatedAtAction("GetUsers", new {id =  userModel.UserId}, userModel);
         }
+
+        //GET: api/Login
+        [HttpGet]
+        [Route("~/api/Login")]
+        public async Task<ActionResult> UserLogin()
+        {
+            const string email = "userEmail";
+            const string password = "userPassword";
+
+            Request.Headers.TryGetValue(email, out var userEmail);
+            Request.Headers.TryGetValue(password, out var userPassword);
+
+            string userEmailAddress = userEmail.ToString();
+
+            var userDetail = await _context.Users.FirstOrDefaultAsync(x => x.UserEmail == userEmailAddress);
+
+            if(userDetail == null)
+            {
+                return Unauthorized(new { message = "INVALID_USER", loggedIn = false });
+            }
+
+			//Hashing the provided password using same salt and hashing algorithm
+			byte[] saltBytes = Convert.FromBase64String(userDetail.Salt);
+            byte[] hashedBytes = new Rfc2898DeriveBytes(userPassword, saltBytes, 10000).GetBytes(20); 
+            string hashedPassword = Convert.ToBase64String(hashedBytes);
+
+            if(hashedPassword != userDetail.UserPassword)
+            {
+                return Unauthorized(new { message = "INVALID_PASSWORD", loggedIn = false });
+            }
+
+            return Ok(new {message = "LOGIN_SUCCESS", loggedIn = true, userId = userDetail.UserId});
+        }
+
     }
 }
