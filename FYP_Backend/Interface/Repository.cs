@@ -97,5 +97,24 @@ namespace FYP_Backend.Interface
 			this._context.Add(user);
 			_ = await this._context.SaveChangesAsync();
 		}
+		public async Task<List<string>> GetAvailableStores(int id)
+		{
+			var availableStores = await _context.StoreProducts.Include(x => x.Store).Include(x => x.Product).Where(x => x.ProductId == id).ToListAsync();
+			List<string> allStores = new();
+
+			foreach(var item in availableStores)
+			{
+				string store = item.Store.StoreName;
+				if (allStores.Contains(store))
+				{
+					continue;
+				}
+				else
+				{
+					allStores.Add(store);
+				}
+			}
+			return allStores;
+		}
 	}
 }

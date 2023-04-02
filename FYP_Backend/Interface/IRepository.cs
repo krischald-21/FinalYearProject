@@ -15,5 +15,6 @@ namespace FYP_Backend.Interface
 		Task<List<StoreProducts>> GetSameProducts(int id);
 		Task<List<Products>> GetProducts(string name);
 		Task RegisterUser(UserModel userModel);
+		Task<List<string>> GetAvailableStores(int id);
 	}
 }

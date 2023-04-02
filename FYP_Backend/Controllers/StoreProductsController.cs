@@ -113,5 +113,13 @@ namespace FYP_Backend.Controllers
         {
             return await _repository.GetSameProducts(id);
         }
+
+        //GET: api/AvailableStores/5
+        [HttpGet]
+        [Route("~/api/AvailableStores/{id}")]
+        public async Task<ActionResult<IEnumerable<string>>> AvailableStores(int id)
+        {
+            return await _repository.GetAvailableStores(id);
+        }
     }
 }

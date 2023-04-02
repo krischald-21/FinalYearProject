@@ -123,7 +123,7 @@
   padding: 0.5rem;
   text-decoration: none;
   color: #333;
-  border: 1px solid #ccc;
+  border: 1px solid #8e3ac9;
   border-radius: 4px;
 }
 
@@ -131,12 +131,17 @@
 .pagination li a:focus,
 .pagination li span:hover,
 .pagination li span:focus {
-  background-color: #ccc;
+  background-color: #8e3ac9;
+  border: 1px solid #8e3ac9;
+  border-radius: 4px;
+  color: white;
 }
 
 .pagination li.selected {
   background-color: #8e3ac9;
   color: #fff;
+  border: 1px solid #8e3ac9;
+  border-radius: 4px;
 }
 
 button#btn-disabled{

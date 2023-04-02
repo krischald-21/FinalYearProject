@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import LoadingIcons from "react-loading-icons";
 import {
   Badge,
   Button,
@@ -32,6 +33,7 @@ const Products = ({ itemsPerPage }) => {
         `${baseUrl}api/SearchProducts/${searchTerm}`
       );
       setItems(response.data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -66,19 +68,25 @@ const Products = ({ itemsPerPage }) => {
       <NavBar />
       <SearchBar searchParams={searchParams.get("q")} />
       <Container>
-        <Row>
-          <Items currentItems={currentItems} searchParams={searchTerm} />
-        </Row>
-        <ReactPaginate
-          className="pagination"
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-        />
+        {loading ? (
+          <LoadingIcons.TailSpin stroke="#7A62E4" />
+        ) : (
+          <>
+            <Row>
+              <Items currentItems={currentItems} searchParams={searchTerm} />
+            </Row>
+            <ReactPaginate
+              className="pagination"
+              breakLabel="..."
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="< previous"
+              renderOnZeroPageCount={null}
+            />
+          </>
+        )}
       </Container>
     </div>
   );
@@ -131,7 +139,7 @@ class Chips extends React.Component {
 
   async componentDidMount() {
     await axios
-      .get("https://localhost:7005/api/SameProduct/" + this.state.productId)
+      .get("https://localhost:7005/api/AvailableStores/" + this.state.productId)
       .then((res) => {
         this.setState({
           data: res.data,
@@ -143,8 +151,36 @@ class Chips extends React.Component {
 
   render() {
     return this.state.data.map((e) => (
-      <Col key={e.storeProductId} lg="4">
-        <Badge color="dark">{e.store.storeName}</Badge>
+      <Col key={e} lg="4">
+        {/* <Badge color="dark">{e}</Badge> */}
+        {e == "daraz" ? (
+          <img
+            src="https://superdesk-pro-c.s3.amazonaws.com/sd-nepalitimes/20221109141144/636baf8d9c7e80680e078059png.png"
+            alt="daraz_logo"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+        ) : (
+          <></>
+        )}
+        {e == "sastodeal" ? (
+          <img
+            src="https://s3-us-west-2.amazonaws.com/cbi-image-service-prd/modified/6267e600-c16f-4a47-8be1-c2e511ae0498.png"
+            alt="sastodeal_logo"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+        ) : (
+          <></>
+        )}
+        {e == "itti" ? (
+          <img
+            src="https://itti.com.np/pub/media/logo/stores/1/itti-logo.png"
+            alt="itti_logo"
+            className="bg-dark"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+        ) : (
+          <></>
+        )}
       </Col>
     ));
   }
