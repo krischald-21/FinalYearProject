@@ -47,8 +47,21 @@ namespace FYP_Backend.Interface
 		}
 		public async Task<List<StoreProducts>> GetSameProducts(int id)
 		{
-			return await _context.StoreProducts.Include(x => x.Product).Include(x => x.Store).Where(x => x.ProductId == id).ToListAsync();
-		}
+			var getProducts = await _context.StoreProducts.Include(x => x.Product).Include(x => x.Store).Where(x => x.ProductId == id).ToListAsync();
+            var result = new List<StoreProducts>();
+            var storeIds = new HashSet<int>();
+
+            foreach (var product in getProducts)
+            {
+                if (!storeIds.Contains(product.StoreId))
+                {
+                    result.Add(product);
+                    storeIds.Add(product.StoreId);
+                }
+            }
+
+            return result;
+        }
 
 		public async Task<List<StoreProducts>> GetStoreProducts()
 		{

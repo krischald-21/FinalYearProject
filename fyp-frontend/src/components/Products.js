@@ -3,18 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingIcons from "react-loading-icons";
 import {
-  Badge,
-  Button,
   Card,
   CardBody,
   CardHeader,
   CardTitle,
   Col,
   Container,
-  Input,
   Row,
 } from "reactstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import NavBar from "./NavBar";
 import SearchBar from "./SearchBar";
 import ReactPaginate from "react-paginate";
@@ -153,7 +150,7 @@ class Chips extends React.Component {
     return this.state.data.map((e) => (
       <Col key={e} lg="4">
         {/* <Badge color="dark">{e}</Badge> */}
-        {e == "daraz" ? (
+        {e === "daraz" ? (
           <img
             src="https://superdesk-pro-c.s3.amazonaws.com/sd-nepalitimes/20221109141144/636baf8d9c7e80680e078059png.png"
             alt="daraz_logo"
@@ -162,7 +159,7 @@ class Chips extends React.Component {
         ) : (
           <></>
         )}
-        {e == "sastodeal" ? (
+        {e === "sastodeal" ? (
           <img
             src="https://s3-us-west-2.amazonaws.com/cbi-image-service-prd/modified/6267e600-c16f-4a47-8be1-c2e511ae0498.png"
             alt="sastodeal_logo"
@@ -171,7 +168,7 @@ class Chips extends React.Component {
         ) : (
           <></>
         )}
-        {e == "itti" ? (
+        {e === "itti" ? (
           <img
             src="https://itti.com.np/pub/media/logo/stores/1/itti-logo.png"
             alt="itti_logo"
