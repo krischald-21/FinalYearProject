@@ -59,7 +59,7 @@ function NavBar() {
                 id="navLink"
                 style={{
                   backgroundColor: "transparent",
-                  marginTop: "0.15em",
+                  marginTop: "0.30em",
                   outline: "none",
                   border: "none",
                 }}

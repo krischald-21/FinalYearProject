@@ -208,7 +208,7 @@ const RegisterForm = () => {
                         onClick={showPassHandler}
                         style={{
                           position: "absolute",
-                          top: "53%",
+                          top: "48%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -221,7 +221,7 @@ const RegisterForm = () => {
                         onClick={showPassHandler}
                         style={{
                           position: "absolute",
-                          top: "53%",
+                          top: "48%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -246,7 +246,7 @@ const RegisterForm = () => {
                         onClick={showCPassHandler}
                         style={{
                           position: "absolute",
-                          top: "69%",
+                          top: "62%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -259,7 +259,7 @@ const RegisterForm = () => {
                         onClick={showCPassHandler}
                         style={{
                           position: "absolute",
-                          top: "69%",
+                          top: "62%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -273,8 +273,17 @@ const RegisterForm = () => {
                   </Row>
                   <Row>
                     <Col lg="12">
+                      Already have an account?{" "}
+                      <a href="/login-form" className="form-link">
+                        Log In
+                      </a>
+                    </Col>
+                  </Row>
+                  <br></br>
+                  <Row>
+                    <Col lg="12" className="p-0">
                       <button
-                        className="buton"
+                        className="buton w-100"
                         style={{ padding: "0.5em 1em" }}
                         id={disableId}
                         disabled={disableBtn}

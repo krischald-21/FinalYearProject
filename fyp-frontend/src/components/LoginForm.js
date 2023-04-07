@@ -172,7 +172,7 @@ const LoginForm = () => {
                         onClick={showPassHandler}
                         style={{
                           position: "absolute",
-                          top: "56%",
+                          top: "47.5%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -185,7 +185,7 @@ const LoginForm = () => {
                         onClick={showPassHandler}
                         style={{
                           position: "absolute",
-                          top: "56%",
+                          top: "47.5%",
                           left: "85%",
                           width: "5%",
                         }}
@@ -199,8 +199,17 @@ const LoginForm = () => {
                   </Row>
                   <Row>
                     <Col lg="12">
+                      Don't have an account?{" "}
+                      <a href="/register-form" className="form-link">
+                        Register
+                      </a>
+                    </Col>
+                  </Row>
+                  <br></br>
+                  <Row>
+                    <Col lg="12" className="p-0">
                       <button
-                        className="buton"
+                        className="buton w-100"
                         style={{ padding: "0.5em 1em" }}
                         id={disableId}
                         disabled={disableBtn}
