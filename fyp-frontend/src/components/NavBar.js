@@ -27,20 +27,23 @@ function NavBar() {
     <div className="nav-bar">
       <Navbar expand="md" className="p-3">
         <NavbarBrand
-          id="navLink"
           href="/"
-          style={{ fontFamily: "'Oswald', sans-serif", fontSize: "1.5em" }}
+          style={{
+            fontFamily: "'Oswald', sans-serif",
+            fontSize: "1.5em",
+            color: "#8e3ac9",
+          }}
         >
           KunSasto
         </NavbarBrand>
         <Nav className="ml-auto" navbar>
           <NavItem>
-            <NavLink id="navLink" href="/">
+            <NavLink className="mt-1" id="navLink" href="/">
               Home
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink id="navLink" href="/contact-form">
+            <NavLink className="mt-1" id="navLink" href="/contact-form">
               Contact
             </NavLink>
           </NavItem>
@@ -78,12 +81,12 @@ function NavBar() {
             <>
               <NavItem>
                 <NavLink id="navLink" href="/register-form">
-                  <button className="buton">Register</button>
+                  <button className="notub w-100">Register</button>
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink id="navLink" href="/login-form">
-                  <button className="buton">Login</button>
+                  <button className="notub w-100">Login</button>
                 </NavLink>
               </NavItem>
             </>

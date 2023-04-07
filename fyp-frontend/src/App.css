@@ -25,6 +25,21 @@
   border-color: #963dd4;
 }
 
+.notub{
+  color: #8e3ac9;
+  border: 2px solid #8e3ac9;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 0.25em 0.5em;
+  transition: all 0.15s;
+  background-color: white;
+}
+
+.notub:hover{
+  background-color: #8e3ac9;
+  color: white;
+}
+
 .nav-bar, #navLink{
   font-weight: bold;
   color: #8e3ac9;

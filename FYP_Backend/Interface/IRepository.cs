@@ -16,5 +16,6 @@ namespace FYP_Backend.Interface
 		Task<List<Products>> GetProducts(string name);
 		Task RegisterUser(UserModel userModel);
 		Task<List<string>> GetAvailableStores(int id);
+		Task<bool> UserSubscribed(int userId, int productId);
 	}
 }

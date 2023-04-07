@@ -23,5 +23,6 @@ namespace FYP_Backend.Data
         public DbSet<FYP_Backend.Models.UserType>? UserType { get; set; }
 
         public DbSet<FYP_Backend.Models.Users>? Users { get; set; }
+        public DbSet<PriceDrop>? PriceDrop { get; set; }
     }
 }

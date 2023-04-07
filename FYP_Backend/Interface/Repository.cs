@@ -129,5 +129,14 @@ namespace FYP_Backend.Interface
 			}
 			return allStores;
 		}
-	}
+		public async Task<bool> UserSubscribed(int userId, int productId)
+		{
+			var getUser = await _context.PriceDrop.Where(x => x.UserId == userId && x.ProductId == productId).FirstOrDefaultAsync();
+			if (getUser != null)
+			{
+				return true;
+			}
+			return false;
+        }
+    }
 }
