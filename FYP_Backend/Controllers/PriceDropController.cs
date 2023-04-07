@@ -53,5 +53,19 @@ namespace FYP_Backend.Controllers
         {
             return await _repository.UserSubscribed(userId, productId);
         }
+
+        //DELETE: api/RemoveSubscription
+        [HttpDelete]
+        [Route("~/api/RemoveSubscription/{userId}/{productId}")]
+        public async Task<IActionResult> DeleteSubscription(int userId, int productId)
+        {
+            var getSubscription = await _context.PriceDrop.Where(x => x.UserId == userId && x.ProductId == productId).FirstOrDefaultAsync();
+            if (getSubscription == null)
+            {
+                return NotFound();
+            }
+            await _repository.DeleteAsync<PriceDrop>(getSubscription.PriceDropId);
+            return NoContent();
+        }
     }
 }

@@ -7,7 +7,8 @@
     }
 	public class UserLoggedIn
 	{
-		public string UserEmail { get; set; }
+        public int UserId { get; set; }
+        public string UserEmail { get; set; }
 		public string UserFullName { get; set; }
 	}
 }

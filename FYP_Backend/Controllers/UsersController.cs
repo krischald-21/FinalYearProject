@@ -172,6 +172,7 @@ namespace FYP_Backend.Controllers
 
             return Ok(new UserLoggedIn
             {
+                UserId = userDetail.UserId,
                 UserEmail = userEmail,
                 UserFullName = userDetail.UserFullName
             });
