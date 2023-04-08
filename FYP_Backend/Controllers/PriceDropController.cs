@@ -54,7 +54,7 @@ namespace FYP_Backend.Controllers
             return await _repository.UserSubscribed(userId, productId);
         }
 
-        //DELETE: api/RemoveSubscription
+        //DELETE: api/RemoveSubscription/5/5
         [HttpDelete]
         [Route("~/api/RemoveSubscription/{userId}/{productId}")]
         public async Task<IActionResult> DeleteSubscription(int userId, int productId)
