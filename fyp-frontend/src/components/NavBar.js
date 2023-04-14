@@ -67,6 +67,9 @@ function NavBar() {
                 {userInfo.userFullName}
               </DropdownToggle>
               <DropdownMenu className="w-100">
+                <DropdownItem onClick={() => navigate("/user-info")}>
+                  User Information
+                </DropdownItem>
                 <DropdownItem
                   onClick={() => {
                     localStorage.removeItem("user-info");

@@ -14,6 +14,16 @@ import "./../App.css";
 import { useNavigate } from "react-router-dom";
 import ReactBSAlert from "react-bootstrap-sweetalert";
 import axios from "axios";
+import {
+  TextField,
+  FilledInput,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const RegisterForm = () => {
   const [fullname, setFullname] = useState("");
@@ -155,12 +165,12 @@ const RegisterForm = () => {
     <div className="contact-form homepage">
       {alert}
       <NavBar />
-      <Container className="mt-5" style={{ width: "40%" }}>
+      <Container className="mt-2" style={{ width: "40%" }}>
         <div className="form-content">
           <form onSubmit={submitHandler}>
             <Card
               style={{
-                backgroundColor: "rgba(255,255,255,0.3)",
+                backgroundColor: "rgba(255,255,255,0.9)",
                 borderColor: "#8e3ac9",
               }}
               className="p-3"
@@ -171,102 +181,86 @@ const RegisterForm = () => {
                 </CardTitle>
                 <CardBody>
                   <Row>
-                    <input
+                    <TextField
+                      id="filled-basic"
+                      label="Full Name"
+                      variant="filled"
                       type="text"
+                      required
                       max={255}
-                      placeholder="Full name"
                       value={fullname}
-                      className="contact-tf"
                       onChange={fullnameChange}
-                      required
+                      margin="normal"
                     />
                   </Row>
                   <Row>
-                    <input
+                    <TextField
+                      id="filled-basic"
+                      label="Email Address"
+                      variant="filled"
                       type="email"
+                      required
                       max={255}
-                      placeholder="Email Address"
                       value={emailAddress}
-                      className="contact-tf"
                       onChange={emailAddressChange}
-                      required
+                      margin="normal"
                     />
                   </Row>
                   <Row>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      value={password}
-                      min="8"
-                      className="contact-tf"
-                      onChange={passwordChange}
-                      required
-                    />
-                    {showPassword ? (
-                      <span
-                        className="material-icons eye-icon"
-                        onClick={showPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "48%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    ) : (
-                      <span
-                        className="material-icons-outlined eye-icon"
-                        onClick={showPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "48%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    )}
+                    <FormControl variant="filled" margin="normal">
+                      <InputLabel htmlFor="filled-adornment-password">
+                        Password
+                      </InputLabel>
+                      <FilledInput
+                        id="filled-adornment-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={passwordChange}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={showPassHandler}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </FormControl>
                   </Row>
                   <Row>
-                    <input
-                      type={showCPassword ? "text" : "password"}
-                      placeholder="Confirm Password"
-                      value={confirmPassword}
-                      min="8"
-                      className="contact-tf"
-                      onChange={confirmPasswordChange}
-                      required
-                    />
-                    {showCPassword ? (
-                      <span
-                        className="material-icons eye-icon"
-                        onClick={showCPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "62%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    ) : (
-                      <span
-                        className="material-icons-outlined eye-icon"
-                        onClick={showCPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "62%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    )}
+                    <FormControl variant="filled" margin="normal">
+                      <InputLabel htmlFor="filled-adornment-password">
+                        Confirm Password
+                      </InputLabel>
+                      <FilledInput
+                        id="filled-adornment-password"
+                        type={showCPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={confirmPasswordChange}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={showCPassHandler}
+                              edge="end"
+                            >
+                              {showCPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </FormControl>
                   </Row>
                   <Row>
                     <h3 className="h5 text-danger">{validation}</h3>

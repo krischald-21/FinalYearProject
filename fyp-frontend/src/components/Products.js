@@ -90,6 +90,9 @@ const Products = ({ itemsPerPage }) => {
 };
 
 const Items = ({ currentItems, searchParams }) => {
+  if (!currentItems || currentItems.length === 0) {
+    return <p className="fw-bold">No results found for {searchParams}</p>;
+  }
   return (
     <>
       {currentItems &&

@@ -178,5 +178,46 @@ namespace FYP_Backend.Controllers
             });
         }
 
+        //POST: api/ChangePassword
+        [HttpPost]
+        [Route("~/api/ChangePassword")]
+        public async Task<ActionResult<Users>> ChangeUserPassword(int userId, UserChangePassword userChangePassword)
+        {
+            string userOldPassword = userChangePassword.OldPassword;
+            string userNewPassword = userChangePassword.NewPassword;
+
+            var getUser = await _repository.SelectById<Users>(userId);
+            if (getUser == null)
+            {
+                return NotFound();
+            }
+
+            byte[] saltBytes = Convert.FromBase64String(getUser.Salt);
+            byte[] hashedBytes = new Rfc2898DeriveBytes(userOldPassword, saltBytes, 10000).GetBytes(20);
+            string hashedPassword = Convert.ToBase64String(hashedBytes);
+
+            if(hashedPassword != getUser.UserPassword)
+            {
+                return Unauthorized(new { message = "INVALID_PASSWORD" });
+            }
+
+            //Generating a random salt
+            byte[] newSalt = new byte[16];
+            new RNGCryptoServiceProvider().GetBytes(newSalt);
+
+            //Hashing the password with the salt using PBKDF2
+            byte[] newHashedPassword = new Rfc2898DeriveBytes(userNewPassword, newSalt, 10000).GetBytes(20);
+
+            //Converting the salt and the hashed password to base64 strings for storing in the database
+            string saltString = Convert.ToBase64String(newSalt);
+            string hashedPasswordString = Convert.ToBase64String(newHashedPassword);
+
+            getUser.UserPassword = hashedPasswordString;
+            getUser.Salt = saltString;
+            _context.SaveChanges();
+
+            return await _repository.SelectById<Users>(userId);
+        }
+
     }
 }

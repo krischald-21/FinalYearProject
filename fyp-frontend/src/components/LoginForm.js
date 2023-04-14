@@ -9,11 +9,21 @@ import {
   Input,
   Row,
 } from "reactstrap";
+import TextField from "@mui/material/TextField";
 import NavBar from "./NavBar";
 import "./../App.css";
 import { useNavigate } from "react-router-dom";
 import ReactBSAlert from "react-bootstrap-sweetalert";
 import axios from "axios";
+import {
+  FilledInput,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const LoginForm = () => {
   const [emailAddress, setEmailAddress] = useState("");
@@ -113,11 +123,30 @@ const LoginForm = () => {
           }
         })
         .catch((e) => {
+          if (
+            e.response.data.message &&
+            e.response.data.message === "INVALID_PASSWORD"
+          ) {
+            warningAlert({
+              title: "Log In Failed",
+              message: "Please enter correct Password!!",
+            });
+          } else if (
+            e.response.data.message &&
+            e.response.data.message === "INVALID_USER"
+          ) {
+            warningAlert({
+              title: "Log In Failed",
+              message: "User not registered in the system!!",
+            });
+          } else {
+            warningAlert({
+              title: "Log In Failed",
+              message: "Log In failed due to network error!!",
+            });
+          }
           console.log(e);
-          warningAlert({
-            title: "Registration Failed",
-            message: "Registration failed due to network error!!",
-          });
+
           setBtnText("Log In");
           setDisableBtn(false);
           setValidation("");
@@ -135,7 +164,7 @@ const LoginForm = () => {
           <form onSubmit={submitHandler}>
             <Card
               style={{
-                backgroundColor: "rgba(255,255,255,0.3)",
+                backgroundColor: "rgba(255,255,255, 0.9)",
                 borderColor: "#8e3ac9",
               }}
               className="p-3"
@@ -146,53 +175,45 @@ const LoginForm = () => {
                 </CardTitle>
                 <CardBody>
                   <Row>
-                    <input
+                    <TextField
+                      id="filled-basic"
+                      label="Email Address"
+                      variant="filled"
                       type="email"
-                      max={255}
-                      placeholder="Email Address"
-                      value={emailAddress}
-                      className="contact-tf"
-                      onChange={emailAddressChange}
                       required
+                      value={emailAddress}
+                      onChange={emailAddressChange}
+                      margin="normal"
+                      color="primary"
                     />
                   </Row>
                   <Row>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      value={password}
-                      min="8"
-                      className="contact-tf"
-                      onChange={passwordChange}
-                      required
-                    />
-                    {showPassword ? (
-                      <span
-                        className="material-icons eye-icon"
-                        onClick={showPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "47.5%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    ) : (
-                      <span
-                        className="material-icons-outlined eye-icon"
-                        onClick={showPassHandler}
-                        style={{
-                          position: "absolute",
-                          top: "47.5%",
-                          left: "85%",
-                          width: "5%",
-                        }}
-                      >
-                        remove_red_eye
-                      </span>
-                    )}
+                    <FormControl variant="filled">
+                      <InputLabel htmlFor="filled-adornment-password">
+                        Password
+                      </InputLabel>
+                      <FilledInput
+                        id="filled-adornment-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={passwordChange}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={showPassHandler}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </FormControl>
                   </Row>
                   <Row>
                     <h3 className="h5 text-danger">{validation}</h3>

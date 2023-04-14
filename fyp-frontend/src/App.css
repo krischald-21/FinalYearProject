@@ -69,7 +69,7 @@
 
 .homepage{
   background: url(./homepage-bg.jpg);
-  background-size: "cover";
+  object-fit: contain;
   background-position: "center";
   backdrop-filter: blur(10px);
   height: 100vh;

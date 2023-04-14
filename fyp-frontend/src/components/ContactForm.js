@@ -14,6 +14,7 @@ import "./../App.css";
 import { useNavigate } from "react-router-dom";
 import ReactBSAlert from "react-bootstrap-sweetalert";
 import axios from "axios";
+import { TextField } from "@mui/material";
 
 const ContactForm = () => {
   const [fullname, setFullname] = useState("");
@@ -114,12 +115,12 @@ const ContactForm = () => {
     <div className="contact-form homepage">
       {alert}
       <NavBar />
-      <Container>
+      <Container style={{ width: "55%" }}>
         <div className="form-content">
           <form onSubmit={submitHandler}>
             <Card
               style={{
-                backgroundColor: "rgba(255,255,255,0.3)",
+                backgroundColor: "rgba(255,255,255,0.9)",
                 borderColor: "#8e3ac9",
               }}
               className="p-3"
@@ -130,50 +131,64 @@ const ContactForm = () => {
                 </CardTitle>
                 <CardBody>
                   <Row>
-                    <input
+                    <TextField
+                      id="filled-basic"
+                      label="Full Name"
+                      variant="filled"
                       type="text"
-                      max={255}
-                      placeholder="Full name"
+                      max="255"
+                      required
                       value={fullname}
-                      className="contact-tf"
                       onChange={fullnameChange}
-                      required
+                      margin="normal"
+                      color="primary"
                     />
                   </Row>
                   <Row>
-                    <input
+                    <TextField
+                      id="filled-basic"
+                      label="Message Subject"
+                      variant="filled"
                       type="text"
-                      placeholder="Message Subject"
+                      max="255"
+                      required
                       value={messageSubject}
-                      className="contact-tf"
                       onChange={messageSubjectChange}
-                      required
+                      margin="normal"
+                      color="primary"
                     />
                   </Row>
                   <Row>
-                    <input
+                    <TextField
+                      id="filled-basic"
+                      label="Email Address"
+                      variant="filled"
                       type="email"
-                      placeholder="Email Address"
-                      value={emailAddress}
-                      className="contact-tf"
-                      onChange={emailAddressChange}
+                      max="255"
                       required
+                      value={emailAddress}
+                      onChange={emailAddressChange}
+                      margin="normal"
+                      color="primary"
                     />
                   </Row>
                   <Row>
-                    <textarea
-                      type="text"
-                      placeholder="Message"
+                    <TextField
+                      multiline
+                      rows={3}
+                      maxRows={4}
+                      variant="filled"
+                      label="Message"
+                      margin="normal"
                       value={messageBody}
-                      className="contact-ta"
                       onChange={messageBodyChange}
                       required
                     />
                   </Row>
                   <Row>
-                    <Col lg="12">
+                    <Col lg="12" className="p-0 mt-3">
                       <button
-                        className="buton"
+                        className="buton w-100"
                         style={{
                           padding: "0.5em 1em",
                         }}
