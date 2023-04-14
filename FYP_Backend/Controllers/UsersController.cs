@@ -173,6 +173,7 @@ namespace FYP_Backend.Controllers
             return Ok(new UserLoggedIn
             {
                 UserId = userDetail.UserId,
+                UserTypeId = userDetail.UserTypeId,
                 UserEmail = userEmail,
                 UserFullName = userDetail.UserFullName
             });
@@ -217,6 +218,26 @@ namespace FYP_Backend.Controllers
             _context.SaveChanges();
 
             return await _repository.SelectById<Users>(userId);
+        }
+
+        // GET: api/UserSubscriptions/5
+        [HttpGet]
+        [Route("~/api/UserSubscriptions/{userId}")]
+        public async Task<ActionResult<IEnumerable<UserSubscription>>> GetUserSubscription(int userId)
+        {
+            var query = from u in _context.Users
+                              join pd in _context.PriceDrop on u.UserId equals pd.UserId
+                              join p in _context.Products on pd.ProductId equals p.ProductId
+                        where u.UserId == userId
+                              select new UserSubscription
+                              {
+                                  UserId = u.UserId,
+                                  UserFullName = u.UserFullName,
+                                  ProductId = p.ProductId,
+                                  ProductName = p.ProductName
+                              };
+
+            return await query.ToListAsync();
         }
 
     }

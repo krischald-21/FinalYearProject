@@ -9,6 +9,7 @@ import {
   CardHeader,
 } from "reactstrap";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import LoadingIcons from "react-loading-icons";
 
 const UserProfile = () => {
@@ -17,6 +18,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const userInfo = JSON.parse(localStorage.getItem("user-info"));
   const userId = userInfo.userId;
+  const userTypeId = userInfo.userTypeId;
 
   const fetchUserData = async (query) => {
     try {
@@ -49,21 +51,11 @@ const UserProfile = () => {
               <thead>
                 <tr className="t-head">
                   <th>Subscribed Products</th>
-                  <th>Current Price</th>
-                  <th>Go to Product</th>
+                  <th>Product Page</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Subscription 1</td>
-                  <td>Active</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Subscription 2</td>
-                  <td>Expired</td>
-                </tr>
+                <GetUserSubscriptions userId={userId} />
               </tbody>
             </Table>
           </div>
@@ -89,5 +81,52 @@ const UserProfile = () => {
     </div>
   );
 };
+
+class GetUserSubscriptions extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      userId: this.props.userId,
+      baseUrl: "https://localhost:7005/",
+    };
+  }
+
+  async componentDidMount() {
+    await axios
+      .get(`${this.state.baseUrl}api/UserSubscriptions/${this.state.userId}`)
+      .then((res) => {
+        this.setState({
+          data: res.data,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  render() {
+    return (
+      <>
+        {this.state.data.map((e) => (
+          <tr key={e.productId}>
+            <td>{e.productName}</td>
+            <td>
+              <Link
+                to={"/product-details/" + e.productId}
+                state={{
+                  id: e.productId,
+                  searchParams: "",
+                }}
+              >
+                <button className="notub">Visit Page</button>
+              </Link>
+            </td>
+          </tr>
+        ))}
+      </>
+    );
+  }
+}
 
 export default UserProfile;

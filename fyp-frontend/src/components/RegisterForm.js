@@ -112,7 +112,7 @@ const RegisterForm = () => {
           .post("https://localhost:7005/api/Register", {
             userFullName: fullname,
             userEmail: emailAddress,
-            userTypeId: 1,
+            userTypeId: 7,
             userPassword: password,
           })
           .then((res) => {

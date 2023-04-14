@@ -8,6 +8,7 @@
 	public class UserLoggedIn
 	{
         public int UserId { get; set; }
+        public int UserTypeId { get; set; }
         public string UserEmail { get; set; }
 		public string UserFullName { get; set; }
 	}
