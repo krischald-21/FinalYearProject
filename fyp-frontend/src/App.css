@@ -178,7 +178,59 @@
 
 button#btn-disabled{
   background-color: #be8fe0;
+  pointer-events: none;
 }
+
+.user-profile-card {
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.user-profile-header {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
+.user-profile-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-profile-fullname, .user-profile-header-section, .user-profile-email {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user-profile-email {
+  color: #7f8c8d;
+}
+
+.user-profile-table {
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.t-head{
+  border: none;
+  border-bottom: 2px solid #8e3ac9;
+  color: #8e3ac9;
+}
+
+.user-profile-table th,
+.user-profile-table td {
+  text-align: center;
+}
+
+.user-profile-table th {
+  background-color: #f2f2f2;
+}
+
+.user-profile-table th,
+.user-profile-table td {
+  vertical-align: middle !important;
+}
+
 
 
 @keyframes App-logo-spin {

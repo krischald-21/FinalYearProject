@@ -178,9 +178,9 @@ namespace FYP_Backend.Controllers
             });
         }
 
-        //POST: api/ChangePassword
+        //POST: api/ChangePassword/5
         [HttpPost]
-        [Route("~/api/ChangePassword")]
+        [Route("~/api/ChangePassword/{userId}")]
         public async Task<ActionResult<Users>> ChangeUserPassword(int userId, UserChangePassword userChangePassword)
         {
             string userOldPassword = userChangePassword.OldPassword;

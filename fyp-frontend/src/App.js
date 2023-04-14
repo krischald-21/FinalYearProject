@@ -8,6 +8,8 @@ import ContactForm from "./components/ContactForm";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import { ThemeProvider, createTheme } from "@mui/material";
+import UserProfile from "./components/UserProfile";
+import ChangePassword from "./components/ChangePassword";
 
 const theme = createTheme({
   palette: {
@@ -46,6 +48,8 @@ function App() {
             <Route exact path="/contact-form" element={<ContactForm />} />
             <Route exact path="/register-form" element={<RegisterForm />} />
             <Route exact path="/login-form" element={<LoginForm />} />
+            <Route exact path="/user-info" element={<UserProfile />} />
+            <Route exact path="/change-password" element={<ChangePassword />} />
           </Routes>
         </Router>
       </ThemeProvider>
