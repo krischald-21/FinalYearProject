@@ -15,6 +15,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 import Modal from "react-modal";
+import axios from "axios";
 
 function NavBar() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -22,7 +23,20 @@ function NavBar() {
   const userInfo = JSON.parse(localStorage.getItem("user-info"));
   const [showModal, setShowModal] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [brandOpen, setBrandOpen] = useState(false);
+  const [brands, setBrands] = useState([]);
   const navigate = useNavigate();
+
+  const fetchBrands = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost:7005/api/ProductBrands`
+      );
+      setBrands(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const customStyles = {
     content: {
@@ -49,7 +63,9 @@ function NavBar() {
     if (userInfo) {
       setLoggedIn(true);
     }
+    fetchBrands();
   }, []);
+
   return (
     <div className="nav-bar">
       <div className="popup-modal">
@@ -129,6 +145,38 @@ function NavBar() {
             <NavLink className="mt-1" id="navLink" href="/contact-form">
               Contact
             </NavLink>
+          </NavItem>
+          <NavItem>
+            <Dropdown
+              isOpen={brandOpen}
+              toggle={() => setBrandOpen(!brandOpen)}
+              className="w-100"
+            >
+              <DropdownToggle
+                caret
+                className="w-100 text-left"
+                id="navLink"
+                style={{
+                  backgroundColor: "transparent",
+                  marginTop: "0.30em",
+                  outline: "none",
+                  border: "none",
+                }}
+              >
+                Laptop By Brands
+              </DropdownToggle>
+              <DropdownMenu className="w-100">
+                {brands.map((e) => (
+                  <DropdownItem
+                    onClick={() =>
+                      navigate(`/products?q=${encodeURIComponent(e)}`)
+                    }
+                  >
+                    {e}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
           </NavItem>
           {loggedIn ? (
             <Dropdown

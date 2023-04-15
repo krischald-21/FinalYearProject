@@ -113,5 +113,24 @@ namespace FYP_Backend.Controllers
         {
             return await _repository.GetProducts(name);
         }
+
+        // GET: api/ProductBrands
+        [Route("~/api/ProductBrands")]
+        [HttpGet]
+        public async Task<IEnumerable<string>> GetSearchProducts()
+        {
+            var brands = await _context.Products.ToListAsync();
+            List<string> productBrands = new();
+
+            foreach(var item in brands)
+            {
+                if (productBrands.Contains(item.ProductBrand))
+                {
+                    continue;
+                }
+                productBrands.Add(item.ProductBrand);
+            }
+            return productBrands;
+        }
     }
 }
