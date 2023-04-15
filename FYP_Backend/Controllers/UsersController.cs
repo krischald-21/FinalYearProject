@@ -11,6 +11,7 @@ using FYP_Backend.Interface;
 using FYP_Backend.Models.DTOs;
 using System.Text;
 using System.Security.Cryptography;
+using System.Data.SqlTypes;
 
 namespace FYP_Backend.Controllers
 {
@@ -240,5 +241,65 @@ namespace FYP_Backend.Controllers
             return await query.ToListAsync();
         }
 
+        //GET: api/Sellers
+        [HttpGet]
+        [Route("~/api/Sellers")]
+        public async Task<ActionResult<IEnumerable<Users>>> GetSellers()
+        {
+            return await _context.Users.Where(x => x.UserTypeId == 6).ToListAsync();
+        }
+        //GET: api/Sellers
+        [HttpGet]
+        [Route("~/api/UsersStore/{id}")]
+        public async Task<ActionResult<UserStore>> GetUserStore(int id)
+        {
+            return await _repository.SelectById<UserStore>(id);
+        }
+
+        //POST: api/RegisterSeller
+        [HttpPost]
+        [Route("~/api/RegisterSeller")]
+        public IActionResult RegisterSeller(SellerRegister sellerRegister)
+        {
+            //Generating a random salt
+            byte[] salt = new byte[16];
+            new RNGCryptoServiceProvider().GetBytes(salt);
+
+            //Hashing the password with the salt using PBKDF2
+            byte[] hashedPassword = new Rfc2898DeriveBytes(sellerRegister.UserPassword, salt, 10000).GetBytes(20);
+
+            //Converting the salt and the hashed password to base64 strings for storing in the database
+            string saltString = Convert.ToBase64String(salt);
+            string hashedPasswordString = Convert.ToBase64String(hashedPassword);
+
+            var user = new Users
+            {
+                UserFullName = sellerRegister.UserFullName,
+                UserEmail = sellerRegister.UserEmail,
+                UserTypeId = sellerRegister.UserTypeId,
+                UserPassword = hashedPasswordString,
+                Salt = saltString
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            var store = new Stores
+            {
+                StoreName = sellerRegister.StoreName,
+                ImgLink = sellerRegister.ImgLink
+            };
+            _context.Stores.Add(store);
+            _context.SaveChanges();
+
+            var userStore = new UserStore
+            {
+                UserId = user.UserId,
+                StoreId = store.StoreId
+            };
+            _context.UserStore.Add(userStore); 
+            _context.SaveChanges();
+
+            return Ok(new {UserStoreId = userStore.UserStoreId});
+        }
     }
 }

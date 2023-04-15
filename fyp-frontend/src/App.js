@@ -10,6 +10,9 @@ import LoginForm from "./components/LoginForm";
 import { ThemeProvider, createTheme } from "@mui/material";
 import UserProfile from "./components/UserProfile";
 import ChangePassword from "./components/ChangePassword";
+import AddSellerForm from "./components/AddSellerForm";
+import SellerDetails from "./components/SellerDetails";
+import AddProductsForm from "./components/AddProductsForm";
 
 const theme = createTheme({
   palette: {
@@ -50,6 +53,9 @@ function App() {
             <Route exact path="/login-form" element={<LoginForm />} />
             <Route exact path="/user-info" element={<UserProfile />} />
             <Route exact path="/change-password" element={<ChangePassword />} />
+            <Route exact path="/register-seller" element={<AddSellerForm />} />
+            <Route exact path="/seller-details" element={<SellerDetails />} />
+            <Route exact path="/add-products" element={<AddProductsForm />} />
           </Routes>
         </Router>
       </ThemeProvider>

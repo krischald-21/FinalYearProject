@@ -24,5 +24,6 @@ namespace FYP_Backend.Data
 
         public DbSet<FYP_Backend.Models.Users>? Users { get; set; }
         public DbSet<PriceDrop>? PriceDrop { get; set; }
+        public DbSet<FYP_Backend.Models.UserStore>? UserStore { get; set; }
     }
 }

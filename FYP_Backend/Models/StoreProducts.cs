@@ -13,4 +13,13 @@ namespace FYP_Backend.Models
 		public double? Price { get; set; }
 		public string ProductLink { get; set; }
 	}
+	public class CreateStoreProducts
+	{
+		[Key]
+        public int StoreProductId { get; set; }
+        public int ProductId { get; set; }
+		public int StoreId { get; set; }
+        public double? Price { get; set; }
+        public string ProductLink { get; set; }
+    }
 }

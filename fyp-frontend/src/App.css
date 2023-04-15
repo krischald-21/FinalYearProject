@@ -115,7 +115,9 @@
 }
 
 .hr-line{
+  background-color: #8e3ac9;
   color: #8e3ac9;
+  height: 3px;
 }
 
 .contact-tf, .contact-ta{
@@ -136,6 +138,20 @@
 
 .contact-ta:focus, .contact-tf:focus{
   border-color: #8e3ac9;
+}
+
+.mail-link, .names{
+  color: #8e3ac9;
+  text-decoration: none;
+}
+
+.mail-link:hover, .names:hover{
+  color: #8e3ac9;
+  text-decoration: underline;
+}
+
+.names{
+  font-weight: bold;
 }
 
 .pagination {
@@ -240,4 +256,17 @@ button#btn-disabled{
   to {
     transform: rotate(360deg);
   }
+}
+
+.dropdown-row{
+  border-bottom: 2px solid #8e3ac9;
+  transition: all 0.2s;
+  padding: 0.75em 1.5em;
+}
+
+.dropdown-row:hover{
+  background-color: white;
+  box-shadow: 0 0 0.25em #8e3ac9;
+  transform: scale(1.1);
+  cursor: pointer;
 }

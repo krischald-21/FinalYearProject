@@ -79,11 +79,19 @@ namespace FYP_Backend.Controllers
         // POST: api/Store_Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<StoreProducts>> PostStore_Products(StoreProducts store_Products)
+        public async Task<ActionResult<StoreProducts>> PostStore_Products(CreateStoreProducts store_Products)
         {
-            await _repository.CreateAsync<StoreProducts>(store_Products);
+            var storeProduct = new StoreProducts
+            {
+                StoreId = store_Products.StoreId,
+                ProductId = store_Products.ProductId,
+                ProductLink = store_Products.ProductLink,
+                Price = store_Products.Price,
+            };
+            _context.StoreProducts.Add(storeProduct);
+            _context.SaveChanges();
 
-            return CreatedAtAction("GetStore_Products", new { id = store_Products.StoreProductId }, store_Products);
+            return CreatedAtAction("GetStore_Products", new { id = storeProduct.StoreProductId }, store_Products);
         }
 
         // DELETE: api/Store_Products/5

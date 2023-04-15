@@ -168,6 +168,7 @@ function NavBar() {
               <DropdownMenu className="w-100">
                 {brands.map((e) => (
                   <DropdownItem
+                    key={e}
                     onClick={() =>
                       navigate(`/products?q=${encodeURIComponent(e)}`)
                     }

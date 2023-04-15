@@ -47,8 +47,8 @@ const LoginForm = () => {
         success
         style={{ display: "block" }}
         title={props.title}
-        onConfirm={() => navigate("/")}
-        onCancel={() => navigate("/")}
+        onConfirm={() => navigate("/user-info")}
+        onCancel={() => navigate("/user-info")}
         confirmBtnBsStyle="success"
         confirmBtnText="Ok"
         btnSize=""

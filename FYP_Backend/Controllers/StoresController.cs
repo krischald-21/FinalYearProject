@@ -105,5 +105,13 @@ namespace FYP_Backend.Controllers
         {
             return _context.Stores.Any(e => e.StoreId == id);
         }
+
+        //GET: api/StoreId/storename
+        [HttpGet]
+        [Route("~/api/StoreId/{storeName}")]
+        public async Task<ActionResult<Stores>> GetStore(string storeName)
+        {
+            return await _context.Stores.Where(x => x.StoreName == storeName).FirstOrDefaultAsync();
+        }
     }
 }
