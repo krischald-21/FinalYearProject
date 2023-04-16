@@ -170,7 +170,7 @@ def send_email(email_address, productLink, name, priceBefore, priceAfter, store)
     smtp_server = 'smtp.gmail.com'
     smtp_port = 587
     smtp_username = 'krischald21@gmail.com'
-    smtp_password = 'gbyurkwkxhwnvoru'
+    smtp_password = 'qrlekfrtqqvmmtdb'
     smtp_connection = smtplib.SMTP(smtp_server, smtp_port)
     smtp_connection.starttls()
     smtp_connection.login(smtp_username, smtp_password)

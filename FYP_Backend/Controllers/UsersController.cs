@@ -12,6 +12,8 @@ using FYP_Backend.Models.DTOs;
 using System.Text;
 using System.Security.Cryptography;
 using System.Data.SqlTypes;
+using System.Net.Mail;
+using System.Net;
 
 namespace FYP_Backend.Controllers
 {
@@ -261,6 +263,11 @@ namespace FYP_Backend.Controllers
         [Route("~/api/RegisterSeller")]
         public IActionResult RegisterSeller(SellerRegister sellerRegister)
         {
+            var getUser = _context.Users.Where(x => x.UserEmail == sellerRegister.UserEmail).FirstOrDefault();
+            if(getUser != null)
+            {
+                return NotFound();
+            }
             //Generating a random salt
             byte[] salt = new byte[16];
             new RNGCryptoServiceProvider().GetBytes(salt);
@@ -298,6 +305,30 @@ namespace FYP_Backend.Controllers
             };
             _context.UserStore.Add(userStore); 
             _context.SaveChanges();
+
+            try
+            {
+                MailMessage message = new MailMessage();
+                message.From = new MailAddress(GlobalVariables.EmailAddress);
+                message.To.Add(sellerRegister.UserEmail);
+                message.Subject = "Registered As Seller on KunSasto";
+                message.Body = "You have been successfully registered for KunSasto as a seller.\nYou may now be able to add your prices to the products available.\nIn absence of product that you want to add, please contact the admin via 'Contact Us' Section of the website!!";
+                SmtpClient client = new()
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    UseDefaultCredentials = false,
+                    EnableSsl = true,
+                    Credentials = new NetworkCredential(GlobalVariables.EmailAddress, GlobalVariables.MessagePass),
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    TargetName = "STARTTLS/smtp.gmail.com"
+                };
+                client.Send(message);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
             return Ok(new {UserStoreId = userStore.UserStoreId});
         }
