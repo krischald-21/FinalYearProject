@@ -516,7 +516,14 @@ class DetailContent extends React.Component {
                     <CardText>Rs. {e.price}</CardText>
                   </Col>
                   <Col lg="3">
-                    <Link to={e.productLink} target="_blank">
+                    <Link
+                      to={
+                        isEmail(e.productLink)
+                          ? `mailto:${e.productLink}`
+                          : e.productLink
+                      }
+                      target="_blank"
+                    >
                       <button className="notub w-100" style={{ height: "3em" }}>
                         Buy from {e.store.storeName}
                       </button>
@@ -531,5 +538,11 @@ class DetailContent extends React.Component {
     );
   }
 }
+
+const isEmail = (link) => {
+  // Regular expression to check if the link is an email address
+  const emailRegex = /\S+@\S+\.\S+/;
+  return emailRegex.test(link);
+};
 
 export default ProductDetail;
